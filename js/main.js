@@ -2,7 +2,7 @@
 
 var OFFERS_NUM = 8;
 
-var OFFERS_TYPES = [
+var OFFER_TYPES = [
   'palace',
   'flat',
   'house',
@@ -10,10 +10,8 @@ var OFFERS_TYPES = [
 ];
 
 var MapScope = {
-  X_MIN: 0,
-  X_MAX: document.querySelector('.map').offsetWidth,
-  Y_MIN: 130,
-  Y_MAX: 630,
+  X: {MIN: 0, MAX: 1200},
+  Y: {MIN: 130, MAX: 630},
 };
 
 var Pin = {
@@ -24,59 +22,62 @@ var Pin = {
 var mapPins = document.querySelector('.map__pins');
 var mapPin = document.querySelector('#pin').content.querySelector('.map__pin');
 
-var activeMap = document.querySelector('.map');
-activeMap.classList.remove('map--faded');
-
 var getRandomItem = function (array) {
-  var index = Math.floor(Math.random() * array.length);
-  return array[index];
+  return array[Math.floor(Math.random() * array.length)];
 };
 
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-var generateDataList = function () {
-  var dataList = [];
-
-  for (var i = 1; i <= OFFERS_NUM; i++) {
-    dataList.push({
-      author: {
-        avatar: 'img/avatars/user0' + i + '.png',
-      },
-      offer: {
-        type: getRandomItem(OFFERS_TYPES),
-      },
-      location: {
-        x: getRandomNumber(MapScope.X_MIN, MapScope.X_MAX),
-        y: getRandomNumber(MapScope.Y_MIN, MapScope.Y_MAX),
-      }
-    });
-  }
-
-  return dataList;
+var makePin = function (id) {
+  return {
+    author: {
+      avatar: 'img/avatars/user' + id + '.png',
+    },
+    offer: {
+      type: getRandomItem(OFFER_TYPES),
+    },
+    location: {
+      x: getRandomNumber(MapScope.X.MIN, MapScope.X.MAX),
+      y: getRandomNumber(MapScope.Y.MIN, MapScope.Y.MAX),
+    },
+  };
 };
 
-var createPin = function (dataList) {
+var getPinIds = function (number) {
+  return Array(number).fill(null).map(function (_, index) {
+    index += 1;
+    return index < 10 ? '0' + index : String(index);
+  });
+};
+
+var getPins = function (number) {
+  return getPinIds(number).map(makePin);
+};
+
+var createPin = function (ad) {
   var pin = mapPin.cloneNode(true);
   var image = pin.querySelector('img');
 
-  pin.style.left = (dataList.location.x - Pin.WIDTH / 2) + 'px';
-  pin.style.top = (dataList.location.y - Pin.HEIGHT) + 'px';
-  image.src = dataList.author.avatar;
-  image.alt = dataList.offer.type;
+  pin.style.left = (ad.location.x - Pin.WIDTH / 2) + 'px';
+  pin.style.top = (ad.location.y - Pin.HEIGHT) + 'px';
+  image.src = ad.author.avatar;
+  image.alt = ad.offer.type;
 
   return pin;
 };
 
-var renderPins = function (dataList) {
+var renderPins = function (target, pins) {
   var fragment = document.createDocumentFragment();
 
-  dataList.forEach(function (data) {
-    fragment.appendChild(createPin(data));
+  pins.forEach(function (pin) {
+    fragment.appendChild(createPin(pin));
   });
 
-  mapPins.appendChild(fragment);
+  target.appendChild(fragment);
 };
 
-renderPins(generateDataList());
+document.querySelector('.map').classList.remove('map--faded');
+
+renderPins(mapPins, getPins(OFFERS_NUM));
