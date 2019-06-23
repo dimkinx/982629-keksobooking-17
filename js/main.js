@@ -19,8 +19,16 @@ var Pin = {
   HEIGHT: 70,
 };
 
+var MapPinMainLocation = {
+  x: Math.floor(MapScope.X.MAX / 2),
+  y: Math.floor(MapScope.Y.MAX / 2),
+};
+
 var mapPins = document.querySelector('.map__pins');
 var mapPin = document.querySelector('#pin').content.querySelector('.map__pin');
+
+var mapPinMain = document.querySelector('.map__pin--main');
+var formsElements = document.querySelectorAll('.map__filters select, .map__filters fieldset, .ad-form fieldset');
 
 var getRandomItem = function (array) {
   return array[Math.floor(Math.random() * array.length)];
@@ -78,6 +86,32 @@ var renderPins = function (target, pins) {
   target.appendChild(fragment);
 };
 
-document.querySelector('.map').classList.remove('map--faded');
+var setValueAddress = function (x, y) {
+  document.querySelector('input[name=address]').value = x + ', ' + y;
+};
 
-renderPins(mapPins, getPins(OFFERS_NUM));
+var deactivateFormsElements = function (array) {
+  array.forEach(function (element) {
+    return element.setAttribute('disabled', true);
+  });
+};
+
+var activateFormsElements = function (array) {
+  array.forEach(function (element) {
+    return element.removeAttribute('disabled');
+  });
+};
+
+var mapPinMainClickHandler = function () {
+  document.querySelector('.map').classList.remove('map--faded');
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+
+  renderPins(mapPins, getPins(OFFERS_NUM));
+  activateFormsElements(formsElements);
+
+  mapPinMain.removeEventListener('click', mapPinMainClickHandler);
+};
+
+setValueAddress(MapPinMainLocation.x, MapPinMainLocation.y);
+deactivateFormsElements(formsElements);
+mapPinMain.addEventListener('click', mapPinMainClickHandler);
