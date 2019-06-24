@@ -19,8 +19,21 @@ var Pin = {
   HEIGHT: 70,
 };
 
-var mapPins = document.querySelector('.map__pins');
-var mapPin = document.querySelector('#pin').content.querySelector('.map__pin');
+var MainPin = {
+  WIDTH: 65,
+  HEIGHT: 65,
+  HEIGHT_WITH_POINTER: 80,
+};
+
+var mapSection = document.querySelector('.map');
+var pinsContainer = mapSection.querySelector('.map__pins');
+var pinButton = document.querySelector('#pin').content.querySelector('.map__pin');
+var mainPinButton = mapSection.querySelector('.map__pin--main');
+var mapForm = mapSection.querySelector('.map__filters');
+var mapFormFields = mapForm.querySelectorAll('select, fieldset');
+var adForm = document.querySelector('.ad-form');
+var adFormFields = adForm.querySelectorAll('fieldset');
+var adFormAddressInput = adForm.querySelector('#address');
 
 var getRandomItem = function (array) {
   return array[Math.floor(Math.random() * array.length)];
@@ -57,7 +70,7 @@ var getPins = function (number) {
 };
 
 var createPin = function (ad) {
-  var pin = mapPin.cloneNode(true);
+  var pin = pinButton.cloneNode(true);
   var image = pin.querySelector('img');
 
   pin.style.left = (ad.location.x - Pin.WIDTH / 2) + 'px';
@@ -78,6 +91,47 @@ var renderPins = function (target, pins) {
   target.appendChild(fragment);
 };
 
-document.querySelector('.map').classList.remove('map--faded');
+var getMainPinButtonPosition = function () {
+  return {
+    x: mainPinButton.offsetLeft + Math.ceil(MainPin.WIDTH / 2),
+    y: mainPinButton.offsetTop + Math.ceil(MainPin.HEIGHT / 2),
+  };
+};
 
-renderPins(mapPins, getPins(OFFERS_NUM));
+var renderAddress = function (location) {
+  adFormAddressInput.value = location.x + ', ' + location.y;
+};
+
+var deactivatePage = function () {
+  adForm.classList.add('ad-form--disabled');
+  mapSection.classList.add('map--faded');
+
+  mapFormFields.forEach(function (element) {
+    element.disabled = true;
+  });
+  adFormFields.forEach(function (element) {
+    element.disabled = true;
+  });
+};
+
+var activatePage = function () {
+  adForm.classList.remove('ad-form--disabled');
+  mapSection.classList.remove('map--faded');
+
+  mapFormFields.forEach(function (element) {
+    element.disabled = false;
+  });
+  adFormFields.forEach(function (element) {
+    element.disabled = false;
+  });
+};
+
+var mainPinButtonClickHandler = function () {
+  activatePage();
+  renderPins(pinsContainer, getPins(OFFERS_NUM));
+  mainPinButton.removeEventListener('click', mainPinButtonClickHandler);
+};
+
+deactivatePage();
+renderAddress(getMainPinButtonPosition());
+mainPinButton.addEventListener('click', mainPinButtonClickHandler);
