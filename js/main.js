@@ -9,6 +9,13 @@ var OFFER_TYPES = [
   'bungalo',
 ];
 
+var OfferPrice = {
+  PALACE: 10000,
+  FLAT: 1000,
+  HOUSE: 5000,
+  BUNGALO: 0,
+};
+
 var MapScope = {
   X: {MIN: 0, MAX: 1200},
   Y: {MIN: 130, MAX: 630},
@@ -34,6 +41,10 @@ var mapFormFields = mapForm.querySelectorAll('select, fieldset');
 var adForm = document.querySelector('.ad-form');
 var adFormFields = adForm.querySelectorAll('fieldset');
 var adFormAddressInput = adForm.querySelector('#address');
+var adFormTypeSelect = adForm.querySelector('#type');
+var adFormPriceInput = adForm.querySelector('#price');
+var adFormTimeInSelect = adForm.querySelector('#timein');
+var adFormTimeOutSelect = adForm.querySelector('#timeout');
 
 var getRandomItem = function (array) {
   return array[Math.floor(Math.random() * array.length)];
@@ -118,12 +129,46 @@ var unsetDisabled = function (element) {
   element.disabled = false;
 };
 
+var adFormPriceInputChangeHandler = function () {
+  var minPrice = function (value) {
+    adFormPriceInput.min = value;
+    adFormPriceInput.placeholder = value;
+  };
+
+  switch (adFormTypeSelect.value) {
+    case 'bungalo':
+      minPrice(OfferPrice.BUNGALO);
+      break;
+    case 'house':
+      minPrice(OfferPrice.HOUSE);
+      break;
+    case 'flat':
+      minPrice(OfferPrice.FLAT);
+      break;
+    case 'palace':
+      minPrice(OfferPrice.PALACE);
+      break;
+  }
+};
+
+var adFormTimeInSelectChangeHandler = function () {
+  adFormTimeInSelect.value = adFormTimeOutSelect.value;
+};
+
+var adFormTimeOutSelectChangeHandler = function () {
+  adFormTimeOutSelect.value = adFormTimeInSelect.value;
+};
+
 var activatePage = function () {
   adForm.classList.remove('ad-form--disabled');
   mapSection.classList.remove('map--faded');
 
   mapFormFields.forEach(unsetDisabled);
   adFormFields.forEach(unsetDisabled);
+
+  adFormTypeSelect.addEventListener('change', adFormPriceInputChangeHandler);
+  adFormTimeInSelect.addEventListener('change', adFormTimeOutSelectChangeHandler);
+  adFormTimeOutSelect.addEventListener('change', adFormTimeInSelectChangeHandler);
 };
 
 var mainPinButtonClickHandler = function () {
