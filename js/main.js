@@ -102,28 +102,28 @@ var renderAddress = function (location) {
   adFormAddressInput.value = location.x + ', ' + location.y;
 };
 
+var setDisabled = function (element) {
+  element.disabled = true;
+};
+
 var deactivatePage = function () {
   adForm.classList.add('ad-form--disabled');
   mapSection.classList.add('map--faded');
 
-  mapFormFields.forEach(function (element) {
-    element.disabled = true;
-  });
-  adFormFields.forEach(function (element) {
-    element.disabled = true;
-  });
+  mapFormFields.forEach(setDisabled);
+  adFormFields.forEach(setDisabled);
+};
+
+var unsetDisabled = function (element) {
+  element.disabled = false;
 };
 
 var activatePage = function () {
   adForm.classList.remove('ad-form--disabled');
   mapSection.classList.remove('map--faded');
 
-  mapFormFields.forEach(function (element) {
-    element.disabled = false;
-  });
-  adFormFields.forEach(function (element) {
-    element.disabled = false;
-  });
+  mapFormFields.forEach(unsetDisabled);
+  adFormFields.forEach(unsetDisabled);
 };
 
 var mainPinButtonClickHandler = function () {
