@@ -2,18 +2,11 @@
 
 var OFFERS_NUM = 8;
 
-var OFFER_TYPES = [
-  'palace',
-  'flat',
-  'house',
-  'bungalo',
-];
-
-var OfferPrice = {
-  PALACE: 10000,
-  FLAT: 1000,
-  HOUSE: 5000,
-  BUNGALO: 0,
+var offerTypesToMinPrice = {
+  'bungalo': 0,
+  'flat': 1000,
+  'house': 5000,
+  'palace': 10000,
 };
 
 var MapScope = {
@@ -60,7 +53,7 @@ var makePin = function (id) {
       avatar: 'img/avatars/user' + id + '.png',
     },
     offer: {
-      type: getRandomItem(OFFER_TYPES),
+      type: getRandomItem(Object.keys(offerTypesToMinPrice)),
     },
     location: {
       x: getRandomNumber(MapScope.X.MIN, MapScope.X.MAX),
@@ -129,26 +122,10 @@ var unsetDisabled = function (element) {
   element.disabled = false;
 };
 
-var adFormPriceInputChangeHandler = function () {
-  var minPrice = function (value) {
-    adFormPriceInput.min = value;
-    adFormPriceInput.placeholder = value;
-  };
-
-  switch (adFormTypeSelect.value) {
-    case 'bungalo':
-      minPrice(OfferPrice.BUNGALO);
-      break;
-    case 'house':
-      minPrice(OfferPrice.HOUSE);
-      break;
-    case 'flat':
-      minPrice(OfferPrice.FLAT);
-      break;
-    case 'palace':
-      minPrice(OfferPrice.PALACE);
-      break;
-  }
+var adFormPriceInputChangeHandler = function (evt) {
+  var minPrice = offerTypesToMinPrice[evt.target.value];
+  adFormPriceInput.min = minPrice;
+  adFormPriceInput.placeholder = minPrice;
 };
 
 var adFormTimeInSelectChangeHandler = function () {
