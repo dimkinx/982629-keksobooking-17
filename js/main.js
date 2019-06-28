@@ -2,12 +2,12 @@
 
 var OFFERS_NUM = 8;
 
-var OFFER_TYPES = [
-  'palace',
-  'flat',
-  'house',
-  'bungalo',
-];
+var offerTypesToMinPrice = {
+  'bungalo': 0,
+  'flat': 1000,
+  'house': 5000,
+  'palace': 10000,
+};
 
 var MapScope = {
   X: {MIN: 0, MAX: 1200},
@@ -34,6 +34,10 @@ var mapFormFields = mapForm.querySelectorAll('select, fieldset');
 var adForm = document.querySelector('.ad-form');
 var adFormFields = adForm.querySelectorAll('fieldset');
 var adFormAddressInput = adForm.querySelector('#address');
+var adFormTypeSelect = adForm.querySelector('#type');
+var adFormPriceInput = adForm.querySelector('#price');
+var adFormTimeInSelect = adForm.querySelector('#timein');
+var adFormTimeOutSelect = adForm.querySelector('#timeout');
 
 var getRandomItem = function (array) {
   return array[Math.floor(Math.random() * array.length)];
@@ -49,7 +53,7 @@ var makePin = function (id) {
       avatar: 'img/avatars/user' + id + '.png',
     },
     offer: {
-      type: getRandomItem(OFFER_TYPES),
+      type: getRandomItem(Object.keys(offerTypesToMinPrice)),
     },
     location: {
       x: getRandomNumber(MapScope.X.MIN, MapScope.X.MAX),
@@ -102,28 +106,46 @@ var renderAddress = function (location) {
   adFormAddressInput.value = location.x + ', ' + location.y;
 };
 
+var setDisabled = function (element) {
+  element.disabled = true;
+};
+
 var deactivatePage = function () {
   adForm.classList.add('ad-form--disabled');
   mapSection.classList.add('map--faded');
 
-  mapFormFields.forEach(function (element) {
-    element.disabled = true;
-  });
-  adFormFields.forEach(function (element) {
-    element.disabled = true;
-  });
+  mapFormFields.forEach(setDisabled);
+  adFormFields.forEach(setDisabled);
+};
+
+var unsetDisabled = function (element) {
+  element.disabled = false;
+};
+
+var adFormPriceInputChangeHandler = function (evt) {
+  var minPrice = offerTypesToMinPrice[evt.target.value];
+  adFormPriceInput.min = minPrice;
+  adFormPriceInput.placeholder = minPrice;
+};
+
+var adFormTimeInSelectChangeHandler = function () {
+  adFormTimeInSelect.value = adFormTimeOutSelect.value;
+};
+
+var adFormTimeOutSelectChangeHandler = function () {
+  adFormTimeOutSelect.value = adFormTimeInSelect.value;
 };
 
 var activatePage = function () {
   adForm.classList.remove('ad-form--disabled');
   mapSection.classList.remove('map--faded');
 
-  mapFormFields.forEach(function (element) {
-    element.disabled = false;
-  });
-  adFormFields.forEach(function (element) {
-    element.disabled = false;
-  });
+  mapFormFields.forEach(unsetDisabled);
+  adFormFields.forEach(unsetDisabled);
+
+  adFormTypeSelect.addEventListener('change', adFormPriceInputChangeHandler);
+  adFormTimeInSelect.addEventListener('change', adFormTimeOutSelectChangeHandler);
+  adFormTimeOutSelect.addEventListener('change', adFormTimeInSelectChangeHandler);
 };
 
 var mainPinButtonClickHandler = function () {
