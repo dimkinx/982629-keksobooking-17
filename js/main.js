@@ -2,13 +2,6 @@
 
 var OFFERS_NUM = 8;
 
-var offerTypesToMinPrice = {
-  'bungalo': 0,
-  'flat': 1000,
-  'house': 5000,
-  'palace': 10000,
-};
-
 var MapScope = {
   X: {MIN: 0, MAX: 1200},
   Y: {MIN: 130, MAX: 630},
@@ -24,6 +17,15 @@ var MainPin = {
   HEIGHT: 65,
   HEIGHT_WITH_POINTER: 80,
 };
+
+var offerTypeToMinPrice = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000,
+};
+
+var offerTypes = Object.keys(offerTypeToMinPrice);
 
 var mapSection = document.querySelector('.map');
 var pinsContainer = mapSection.querySelector('.map__pins');
@@ -53,7 +55,7 @@ var makePin = function (id) {
       avatar: 'img/avatars/user' + id + '.png',
     },
     offer: {
-      type: getRandomItem(Object.keys(offerTypesToMinPrice)),
+      type: getRandomItem(offerTypes),
     },
     location: {
       x: getRandomNumber(MapScope.X.MIN, MapScope.X.MAX),
@@ -123,7 +125,7 @@ var unsetDisabled = function (element) {
 };
 
 var adFormPriceInputChangeHandler = function (evt) {
-  var minPrice = offerTypesToMinPrice[evt.target.value];
+  var minPrice = offerTypeToMinPrice[evt.target.value];
   adFormPriceInput.min = minPrice;
   adFormPriceInput.placeholder = minPrice;
 };
