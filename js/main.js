@@ -27,6 +27,10 @@ var offerTypeToMinPrice = {
 
 var offerTypes = Object.keys(offerTypeToMinPrice);
 
+var isPageActivated = false;
+
+var isPinsNeedRendered = true;
+
 var mapSection = document.querySelector('.map');
 var pinsContainer = mapSection.querySelector('.map__pins');
 var pinButton = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -98,7 +102,10 @@ var renderPins = function (target, pins) {
 };
 
 var getMainPinButtonPosition = function () {
-  return {
+  return (isPageActivated && {
+    x: mainPinButton.offsetLeft + Math.ceil(MainPin.WIDTH / 2),
+    y: mainPinButton.offsetTop + MainPin.HEIGHT_WITH_POINTER,
+  }) || {
     x: mainPinButton.offsetLeft + Math.ceil(MainPin.WIDTH / 2),
     y: mainPinButton.offsetTop + Math.ceil(MainPin.HEIGHT / 2),
   };
@@ -113,6 +120,8 @@ var setDisabled = function (element) {
 };
 
 var deactivatePage = function () {
+  isPageActivated = false;
+
   adForm.classList.add('ad-form--disabled');
   mapSection.classList.add('map--faded');
 
@@ -139,6 +148,8 @@ var adFormTimeOutSelectChangeHandler = function () {
 };
 
 var activatePage = function () {
+  isPageActivated = true;
+
   adForm.classList.remove('ad-form--disabled');
   mapSection.classList.remove('map--faded');
 
@@ -150,12 +161,63 @@ var activatePage = function () {
   adFormTimeOutSelect.addEventListener('change', adFormTimeInSelectChangeHandler);
 };
 
-var mainPinButtonClickHandler = function () {
-  activatePage();
-  renderPins(pinsContainer, getPins(OFFERS_NUM));
-  mainPinButton.removeEventListener('click', mainPinButtonClickHandler);
+var hasMove = function (start, end) {
+  return start.clientX !== end.clientX
+    || start.clientY !== end.clientY;
 };
+
+var makeDragStart = function (moveHandler, endHandler) {
+  return function (evt) {
+    evt.preventDefault();
+
+    var start = {
+      clientX: evt.clientX,
+      clientY: evt.clientY,
+    };
+
+    var mouseMoveHandler = function (moveEvt) {
+      moveEvt.preventDefault();
+      moveHandler(moveEvt.movementX, moveEvt.movementY);
+    };
+
+    var mouseUpHandler = function (upEvt) {
+      upEvt.preventDefault();
+      document.removeEventListener('mousemove', mouseMoveHandler);
+      return hasMove(start, upEvt) && endHandler();
+    };
+
+    document.addEventListener('mousemove', mouseMoveHandler);
+    document.addEventListener('mouseup', mouseUpHandler, {once: true});
+  };
+};
+
+var limitingCoordinate = function (coordinate, min, max) {
+  if (coordinate < min) {
+    coordinate = min;
+  }
+
+  if (coordinate > max) {
+    coordinate = max;
+  }
+
+  return coordinate;
+};
+
+var mainPinButtonDragMoveHandler = function (x, y) {
+  mainPinButton.style.left = limitingCoordinate(mainPinButton.offsetLeft, MapScope.X.MIN, MapScope.X.MAX - MainPin.WIDTH) + x + 'px';
+  mainPinButton.style.top = limitingCoordinate(mainPinButton.offsetTop, MapScope.Y.MIN, MapScope.Y.MAX) + y + 'px';
+
+  renderAddress(getMainPinButtonPosition());
+
+  activatePage();
+};
+
+var mainPinButtonDragEndHandler = function () {
+  return (isPinsNeedRendered && renderPins(pinsContainer, getPins(OFFERS_NUM))) || (isPinsNeedRendered = false);
+};
+
+var mainPinButtonDragStartHandler = makeDragStart(mainPinButtonDragMoveHandler, mainPinButtonDragEndHandler);
 
 deactivatePage();
 renderAddress(getMainPinButtonPosition());
-mainPinButton.addEventListener('click', mainPinButtonClickHandler);
+mainPinButton.addEventListener('mousedown', mainPinButtonDragStartHandler);
