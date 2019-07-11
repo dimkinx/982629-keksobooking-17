@@ -12,7 +12,7 @@ var Pin = {
   HEIGHT: 70,
 };
 
-var MainPin = {
+var PinSize = {
   WIDTH: 65,
   HEIGHT: 65,
   HEIGHT_WITH_POINTER: 80,
@@ -102,7 +102,7 @@ var renderPins = function (target, pins) {
 
 var getMainPinButtonPosition = function (verticalPoint) {
   return {
-    x: mainPinButton.offsetLeft + Math.ceil(MainPin.WIDTH / 2),
+    x: mainPinButton.offsetLeft + Math.ceil(PinSize.WIDTH / 2),
     y: mainPinButton.offsetTop + verticalPoint,
   };
 };
@@ -122,7 +122,7 @@ var deactivatePage = function () {
   mapFormFields.forEach(setDisabled);
   adFormFields.forEach(setDisabled);
 
-  renderAddress(getMainPinButtonPosition(MainPin.RADIUS));
+  renderAddress(getMainPinButtonPosition(PinSize.RADIUS));
 
   mainPinButton.addEventListener('mouseup', activatePage, {once: true});
 };
@@ -156,7 +156,7 @@ var activatePage = function () {
   adFormTimeInSelect.addEventListener('change', adFormTimeOutSelectChangeHandler);
   adFormTimeOutSelect.addEventListener('change', adFormTimeInSelectChangeHandler);
 
-  renderAddress(getMainPinButtonPosition(MainPin.HEIGHT_WITH_POINTER));
+  renderAddress(getMainPinButtonPosition(PinSize.HEIGHT_WITH_POINTER));
 
   renderPins(pinsContainer, getPins(OFFERS_NUM));
 };
@@ -198,12 +198,12 @@ var limitingCoordinate = function (coordinate, min, max) {
 var calcMainPinOffset = function (x, y) {
   return {
     x: limitingCoordinate(
-        x - mapRect.left - MainPin.WIDTH / 2,
-        MapScope.X.MIN - MainPin.WIDTH / 2,
-        MapScope.X.MAX - MainPin.WIDTH / 2
+        x - mapRect.left - PinSize.WIDTH / 2,
+        MapScope.X.MIN - PinSize.WIDTH / 2,
+        MapScope.X.MAX - PinSize.WIDTH / 2
     ),
     y: limitingCoordinate(
-        y - mapRect.top - MainPin.HEIGHT / 2,
+        y - mapRect.top - PinSize.HEIGHT / 2,
         MapScope.Y.MIN,
         MapScope.Y.MAX
     ),
@@ -217,7 +217,7 @@ var renderMainPin = function (offset) {
 
 var mainPinButtonDragMoveHandler = function (x, y) {
   renderMainPin(calcMainPinOffset(x, y));
-  renderAddress(getMainPinButtonPosition(MainPin.HEIGHT_WITH_POINTER));
+  renderAddress(getMainPinButtonPosition(PinSize.HEIGHT_WITH_POINTER));
 };
 
 var mainPinButtonDragEndHandler = function () {
