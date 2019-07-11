@@ -198,12 +198,12 @@ var limitingCoordinate = function (coordinate, min, max) {
 var calcMainPinOffset = function (x, y) {
   return {
     x: limitingCoordinate(
-        x - mapRect.left - PinSize.WIDTH / 2,
-        MapScope.X.MIN - PinSize.WIDTH / 2,
-        MapScope.X.MAX - PinSize.WIDTH / 2
+        x - mapRect.left - PinSize.RADIUS,
+        MapScope.X.MIN - PinSize.RADIUS,
+        MapScope.X.MAX - PinSize.RADIUS
     ),
     y: limitingCoordinate(
-        y - mapRect.top - PinSize.HEIGHT / 2,
+        y - mapRect.top - PinSize.RADIUS,
         MapScope.Y.MIN,
         MapScope.Y.MAX
     ),
