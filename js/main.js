@@ -16,6 +16,7 @@ var MainPin = {
   WIDTH: 65,
   HEIGHT: 65,
   HEIGHT_WITH_POINTER: 80,
+  RADIUS: 33,
 };
 
 var offerTypeToMinPrice = {
@@ -26,10 +27,6 @@ var offerTypeToMinPrice = {
 };
 
 var offerTypes = Object.keys(offerTypeToMinPrice);
-
-var isPageActivated = false;
-
-var isPinsNeedRendered = true;
 
 var mapSection = document.querySelector('.map');
 var pinsContainer = mapSection.querySelector('.map__pins');
@@ -101,13 +98,10 @@ var renderPins = function (target, pins) {
   target.appendChild(fragment);
 };
 
-var getMainPinButtonPosition = function () {
-  return (isPageActivated && {
+var getMainPinButtonPosition = function (verticalPoint) {
+  return {
     x: mainPinButton.offsetLeft + Math.ceil(MainPin.WIDTH / 2),
-    y: mainPinButton.offsetTop + MainPin.HEIGHT_WITH_POINTER,
-  }) || {
-    x: mainPinButton.offsetLeft + Math.ceil(MainPin.WIDTH / 2),
-    y: mainPinButton.offsetTop + Math.ceil(MainPin.HEIGHT / 2),
+    y: mainPinButton.offsetTop + verticalPoint,
   };
 };
 
@@ -120,13 +114,15 @@ var setDisabled = function (element) {
 };
 
 var deactivatePage = function () {
-  isPageActivated = false;
-
   adForm.classList.add('ad-form--disabled');
   mapSection.classList.add('map--faded');
 
   mapFormFields.forEach(setDisabled);
   adFormFields.forEach(setDisabled);
+
+  renderAddress(getMainPinButtonPosition(MainPin.RADIUS));
+
+  mainPinButton.addEventListener('mousedown', activatePage, {once: true});
 };
 
 var unsetDisabled = function (element) {
@@ -148,8 +144,6 @@ var adFormTimeOutSelectChangeHandler = function () {
 };
 
 var activatePage = function () {
-  isPageActivated = true;
-
   adForm.classList.remove('ad-form--disabled');
   mapSection.classList.remove('map--faded');
 
@@ -161,7 +155,7 @@ var activatePage = function () {
   adFormTimeOutSelect.addEventListener('change', adFormTimeInSelectChangeHandler);
 };
 
-var hasMove = function (start, end) {
+var hasMoved = function (start, end) {
   return start.clientX !== end.clientX
     || start.clientY !== end.clientY;
 };
@@ -183,7 +177,7 @@ var makeDragStart = function (moveHandler, endHandler) {
     var mouseUpHandler = function (upEvt) {
       upEvt.preventDefault();
       document.removeEventListener('mousemove', mouseMoveHandler);
-      return hasMove(start, upEvt) && endHandler();
+      return hasMoved(start, upEvt) && endHandler();
     };
 
     document.addEventListener('mousemove', mouseMoveHandler);
@@ -192,32 +186,42 @@ var makeDragStart = function (moveHandler, endHandler) {
 };
 
 var limitingCoordinate = function (coordinate, min, max) {
-  if (coordinate < min) {
-    coordinate = min;
-  }
+  return Math.min(Math.max(coordinate, min), max);
+};
 
-  if (coordinate > max) {
-    coordinate = max;
-  }
+var calcMainPinOffset = function (offsetLeft, offsetTop, x, y) {
+  return {
+    x: limitingCoordinate(
+        offsetLeft,
+        MapScope.X.MIN,
+        MapScope.X.MAX - MainPin.WIDTH
+    ) + x,
+    y: limitingCoordinate(
+        offsetTop,
+        MapScope.Y.MIN - MainPin.HEIGHT_WITH_POINTER,
+        MapScope.Y.MAX - MainPin.HEIGHT_WITH_POINTER
+    ) + y,
+  };
+};
 
-  return coordinate;
+var renderMainPin = function (offset) {
+  mainPinButton.style.left = offset.x + 'px';
+  mainPinButton.style.top = offset.y + 'px';
 };
 
 var mainPinButtonDragMoveHandler = function (x, y) {
-  mainPinButton.style.left = limitingCoordinate(mainPinButton.offsetLeft, MapScope.X.MIN, MapScope.X.MAX - MainPin.WIDTH) + x + 'px';
-  mainPinButton.style.top = limitingCoordinate(mainPinButton.offsetTop, MapScope.Y.MIN, MapScope.Y.MAX) + y + 'px';
-
-  renderAddress(getMainPinButtonPosition());
-
-  activatePage();
+  renderMainPin(calcMainPinOffset(mainPinButton.offsetLeft, mainPinButton.offsetTop, x, y));
+  renderAddress(getMainPinButtonPosition(MainPin.HEIGHT_WITH_POINTER));
 };
 
 var mainPinButtonDragEndHandler = function () {
-  return (isPinsNeedRendered && renderPins(pinsContainer, getPins(OFFERS_NUM))) || (isPinsNeedRendered = false);
+  renderPins(pinsContainer, getPins(OFFERS_NUM));
 };
 
-var mainPinButtonDragStartHandler = makeDragStart(mainPinButtonDragMoveHandler, mainPinButtonDragEndHandler);
+var mainPinButtonDragStartHandler = makeDragStart(
+    mainPinButtonDragMoveHandler,
+    mainPinButtonDragEndHandler
+);
 
 deactivatePage();
-renderAddress(getMainPinButtonPosition());
 mainPinButton.addEventListener('mousedown', mainPinButtonDragStartHandler);
