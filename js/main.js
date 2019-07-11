@@ -42,6 +42,8 @@ var adFormPriceInput = adForm.querySelector('#price');
 var adFormTimeInSelect = adForm.querySelector('#timein');
 var adFormTimeOutSelect = adForm.querySelector('#timeout');
 
+var mapRect = mapSection.getBoundingClientRect();
+
 var getRandomItem = function (array) {
   return array[Math.floor(Math.random() * array.length)];
 };
@@ -122,7 +124,7 @@ var deactivatePage = function () {
 
   renderAddress(getMainPinButtonPosition(MainPin.RADIUS));
 
-  mainPinButton.addEventListener('mousedown', activatePage, {once: true});
+  mainPinButton.addEventListener('mouseup', activatePage, {once: true});
 };
 
 var unsetDisabled = function (element) {
@@ -153,6 +155,10 @@ var activatePage = function () {
   adFormTypeSelect.addEventListener('change', adFormPriceInputChangeHandler);
   adFormTimeInSelect.addEventListener('change', adFormTimeOutSelectChangeHandler);
   adFormTimeOutSelect.addEventListener('change', adFormTimeInSelectChangeHandler);
+
+  renderAddress(getMainPinButtonPosition(MainPin.HEIGHT_WITH_POINTER));
+
+  renderPins(pinsContainer, getPins(OFFERS_NUM));
 };
 
 var hasMoved = function (start, end) {
@@ -171,7 +177,7 @@ var makeDragStart = function (moveHandler, endHandler) {
 
     var mouseMoveHandler = function (moveEvt) {
       moveEvt.preventDefault();
-      moveHandler(moveEvt.movementX, moveEvt.movementY);
+      moveHandler(moveEvt.clientX, moveEvt.clientY);
     };
 
     var mouseUpHandler = function (upEvt) {
@@ -189,18 +195,18 @@ var limitingCoordinate = function (coordinate, min, max) {
   return Math.min(Math.max(coordinate, min), max);
 };
 
-var calcMainPinOffset = function (offsetLeft, offsetTop, x, y) {
+var calcMainPinOffset = function (x, y) {
   return {
     x: limitingCoordinate(
-        offsetLeft,
-        MapScope.X.MIN,
-        MapScope.X.MAX - MainPin.WIDTH
-    ) + x,
+        x - mapRect.left - MainPin.WIDTH / 2,
+        MapScope.X.MIN - MainPin.WIDTH / 2,
+        MapScope.X.MAX - MainPin.WIDTH / 2
+    ),
     y: limitingCoordinate(
-        offsetTop,
-        MapScope.Y.MIN - MainPin.HEIGHT_WITH_POINTER,
-        MapScope.Y.MAX - MainPin.HEIGHT_WITH_POINTER
-    ) + y,
+        y - mapRect.top - MainPin.HEIGHT / 2,
+        MapScope.Y.MIN,
+        MapScope.Y.MAX
+    ),
   };
 };
 
@@ -210,12 +216,11 @@ var renderMainPin = function (offset) {
 };
 
 var mainPinButtonDragMoveHandler = function (x, y) {
-  renderMainPin(calcMainPinOffset(mainPinButton.offsetLeft, mainPinButton.offsetTop, x, y));
+  renderMainPin(calcMainPinOffset(x, y));
   renderAddress(getMainPinButtonPosition(MainPin.HEIGHT_WITH_POINTER));
 };
 
 var mainPinButtonDragEndHandler = function () {
-  renderPins(pinsContainer, getPins(OFFERS_NUM));
 };
 
 var mainPinButtonDragStartHandler = makeDragStart(
