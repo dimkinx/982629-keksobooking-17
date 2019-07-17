@@ -1,71 +1,60 @@
 'use strict';
 
-(function () {
-  var map = document.querySelector('.map');
-  var mainPin = map.querySelector('.map__pin--main');
+(function (MainPinSize, MainPinRect) {
+  var mapSection = document.querySelector('.map');
+  var pinsContainer = mapSection.querySelector('.map__pins');
+  var mainPinButton = mapSection.querySelector('.map__pin--main');
 
   var getMainPinPosition = function (verticalPoint) {
     return {
-      x: mainPin.offsetLeft + window.constants.MainPinSize.RADIUS,
-      y: mainPin.offsetTop + verticalPoint,
+      x: mainPinButton.offsetLeft + MainPinSize.RADIUS,
+      y: mainPinButton.offsetTop + verticalPoint,
     };
   };
 
-  var limitingCoordinate = function (coordinate, min, max) {
-    return Math.min(Math.max(coordinate, min), max);
+  var renderMainPin = function (x, y) {
+    mainPinButton.style.left = x + 'px';
+    mainPinButton.style.top = y + 'px';
   };
 
-  var setMainPinPosition = function (x, y) {
-    mainPin.style.left = limitingCoordinate(
-        x,
-        window.constants.MapBounders.LEFT_WITHOUT_MAIN_PIN_RADIUS,
-        window.constants.MapBounders.RIGHT_WITHOUT_MAIN_PIN_RADIUS
-    ) + 'px';
-    mainPin.style.top = limitingCoordinate(
-        y,
-        window.constants.MapBounders.TOP,
-        window.constants.MapBounders.BOTTOM
-    ) + 'px';
+  var activatePageOnce = window.utils.once(function () {
+    window.page.activate();
+  });
+
+  var renderPinsOnce = window.utils.once(function () {
+    window.map.renderPins(pinsContainer, window.mock.load());
+  });
+
+  var mainPinStartHandler = function () {
+    return {
+      x: mainPinButton.offsetLeft,
+      y: mainPinButton.offsetTop,
+    };
   };
 
-  var mainPinDragStartHandler = function (evt) {
-    evt.preventDefault();
+  var mainPinMoveHandler = function (x, y) {
+    x = Math.min(Math.max(x, MainPinRect.LEFT), MainPinRect.RIGHT);
+    y = Math.min(Math.max(y, MainPinRect.TOP), MainPinRect.BOTTOM);
 
-    var start = {
-      x: mainPin.offsetLeft,
-      y: mainPin.offsetTop,
-    };
+    renderMainPin(x, y);
 
-    var shift = {
-      x: 0,
-      y: 0,
-    };
-
-    var mouseMoveHandler = function (moveEvt) {
-      moveEvt.preventDefault();
-
-      shift.x = moveEvt.clientX - evt.clientX;
-      shift.y = moveEvt.clientY - evt.clientY;
-
-      setMainPinPosition(
-          start.x + shift.x,
-          start.y + shift.y
-      );
-
-      window.ad.renderAddress(getMainPinPosition(window.constants.MainPinSize.HEIGHT));
-    };
-
-    var mouseUpHandler = function (upEvt) {
-      upEvt.preventDefault();
-      document.removeEventListener('mousemove', mouseMoveHandler);
-    };
-
-    document.addEventListener('mousemove', mouseMoveHandler);
-    document.addEventListener('mouseup', mouseUpHandler, {once: true});
+    window.ad.renderAddress(getMainPinPosition(MainPinSize.HEIGHT));
+    activatePageOnce();
   };
+
+  var mainPinEndHandler = function () {
+    activatePageOnce();
+    renderPinsOnce();
+  };
+
+  var mainPinDragStartHandler = window.utils.makeDragStart(
+      mainPinStartHandler,
+      mainPinMoveHandler,
+      mainPinEndHandler
+  );
 
   window.pin = {
     getMainPinPosition: getMainPinPosition,
     mainPinDragStartHandler: mainPinDragStartHandler,
   };
-})();
+})(window.types.MainPinSize, window.types.MainPinRect);

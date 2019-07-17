@@ -9,8 +9,49 @@
     element.disabled = false;
   };
 
+  var once = function (fn, context) {
+    var result;
+    return function () {
+      if (fn) {
+        // eslint-disable-next-line no-invalid-this
+        result = fn.apply(context || this, arguments);
+        fn = null;
+      }
+      return result;
+    };
+  };
+
+  var makeDragStart = function (startHandler, moveHandler, endHandler) {
+    return function (evt) {
+      evt.preventDefault();
+
+      var start = startHandler(evt);
+      start.x = start.x || 0;
+      start.y = start.y || 0;
+
+      var mouseMoveHandler = function (moveEvt) {
+        moveEvt.preventDefault();
+        moveHandler(
+            start.x + moveEvt.clientX - evt.clientX,
+            start.y + moveEvt.clientY - evt.clientY
+        );
+      };
+
+      var mouseUpHandler = function (upEvt) {
+        upEvt.preventDefault();
+        document.removeEventListener('mousemove', mouseMoveHandler);
+        endHandler();
+      };
+
+      document.addEventListener('mousemove', mouseMoveHandler);
+      document.addEventListener('mouseup', mouseUpHandler, {once: true});
+    };
+  };
+
   window.utils = {
     setDisabled: setDisabled,
     unsetDisabled: unsetDisabled,
+    once: once,
+    makeDragStart: makeDragStart,
   };
 })();

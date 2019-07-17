@@ -1,7 +1,9 @@
 'use strict';
 
-(function () {
-  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+(function (offerTypeToMinPrice, MapRect) {
+  var OFFERS_NUM = 8;
+
+  var offerTypes = Object.keys(offerTypeToMinPrice);
 
   var getRandomItem = function (array) {
     return array[Math.floor(Math.random() * array.length)];
@@ -17,11 +19,11 @@
         avatar: 'img/avatars/user' + id + '.png',
       },
       offer: {
-        type: getRandomItem(window.data.offerTypes),
+        type: getRandomItem(offerTypes),
       },
       location: {
-        x: getRandomNumber(window.constants.MapBounders.LEFT, window.constants.MapBounders.RIGHT),
-        y: getRandomNumber(window.constants.MapBounders.TOP, window.constants.MapBounders.BOTTOM),
+        x: getRandomNumber(MapRect.LEFT, MapRect.RIGHT),
+        y: getRandomNumber(MapRect.TOP, MapRect.BOTTOM),
       },
     };
   };
@@ -34,33 +36,10 @@
   };
 
   var getPins = function (number) {
-    return getPinIds(number).map(makePin);
-  };
-
-  var createPin = function (ad) {
-    var pin = pinTemplate.cloneNode(true);
-    var image = pin.querySelector('img');
-
-    pin.style.left = (ad.location.x - window.constants.PinSize.RADIUS) + 'px';
-    pin.style.top = (ad.location.y) + 'px';
-    image.src = ad.author.avatar;
-    image.alt = ad.offer.type;
-
-    return pin;
-  };
-
-  var renderPins = function (target, pins) {
-    var fragment = document.createDocumentFragment();
-
-    pins.forEach(function (pin) {
-      fragment.appendChild(createPin(pin));
-    });
-
-    target.appendChild(fragment);
+    return getPinIds(number || OFFERS_NUM).map(makePin);
   };
 
   window.mock = {
-    getPins: getPins,
-    renderPins: renderPins,
+    load: getPins,
   };
-})();
+})(window.types.offerTypeToMinPrice, window.types.MapRect);

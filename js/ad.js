@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+(function (offerTypeToMinPrice, MainPinSize) {
   var form = document.querySelector('.ad-form');
   var fields = form.querySelectorAll('fieldset');
   var addressInput = form.querySelector('#address');
@@ -14,7 +14,7 @@
   };
 
   var priceInputChangeHandler = function (evt) {
-    var minPrice = window.data.offerTypeToMinPrice[evt.target.value];
+    var minPrice = offerTypeToMinPrice[evt.target.value];
     priceInput.min = minPrice;
     priceInput.placeholder = minPrice;
   };
@@ -31,14 +31,14 @@
     form.classList.remove('ad-form--disabled');
     fields.forEach(window.utils.unsetDisabled);
 
-    renderAddress(window.pin.getMainPinPosition(window.constants.MainPinSize.HEIGHT));
+    renderAddress(window.pin.getMainPinPosition(MainPinSize.HEIGHT));
   };
 
   var deactivate = function () {
     form.classList.add('ad-form--disabled');
     fields.forEach(window.utils.setDisabled);
 
-    renderAddress(window.pin.getMainPinPosition(window.constants.MainPinSize.RADIUS));
+    renderAddress(window.pin.getMainPinPosition(MainPinSize.RADIUS));
   };
 
   typeSelect.addEventListener('change', priceInputChangeHandler);
@@ -50,4 +50,4 @@
     activate: activate,
     deactivate: deactivate,
   };
-})();
+})(window.types.offerTypeToMinPrice, window.types.MainPinSize);
