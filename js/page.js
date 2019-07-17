@@ -2,12 +2,19 @@
 
 (function () {
   var mapSection = document.querySelector('.map');
+  var pinsContainer = mapSection.querySelector('.map__pins');
   var mainPinButton = mapSection.querySelector('.map__pin--main');
+
+  var renderPinsOnce = window.utils.once(function () {
+    window.map.renderPins(pinsContainer, window.mock.load());
+  });
 
   var activate = function () {
     window.ad.activate();
     window.filter.activate();
     mapSection.classList.remove('map--faded');
+
+    renderPinsOnce();
   };
 
   var deactivate = function () {

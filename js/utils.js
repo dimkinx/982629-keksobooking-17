@@ -9,12 +9,11 @@
     element.disabled = false;
   };
 
-  var once = function (fn, context) {
+  var once = function (fn) {
     var result;
     return function () {
       if (fn) {
-        // eslint-disable-next-line no-invalid-this
-        result = fn.apply(context || this, arguments);
+        result = fn();
         fn = null;
       }
       return result;

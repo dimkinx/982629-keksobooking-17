@@ -2,7 +2,6 @@
 
 (function (MainPinSize, MainPinRect) {
   var mapSection = document.querySelector('.map');
-  var pinsContainer = mapSection.querySelector('.map__pins');
   var mainPinButton = mapSection.querySelector('.map__pin--main');
 
   var getMainPinPosition = function (verticalPoint) {
@@ -19,10 +18,6 @@
 
   var activatePageOnce = window.utils.once(function () {
     window.page.activate();
-  });
-
-  var renderPinsOnce = window.utils.once(function () {
-    window.map.renderPins(pinsContainer, window.mock.load());
   });
 
   var mainPinStartHandler = function () {
@@ -44,7 +39,6 @@
 
   var mainPinEndHandler = function () {
     activatePageOnce();
-    renderPinsOnce();
   };
 
   var mainPinDragStartHandler = window.utils.makeDragStart(
