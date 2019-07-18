@@ -1,9 +1,9 @@
 'use strict';
 
-(function (offerTypeToMinPrice, MapRect) {
+(function (types) {
   var OFFERS_NUM = 8;
 
-  var offerTypes = Object.keys(offerTypeToMinPrice);
+  var offerTypes = Object.keys(types.offerTypeToMinPrice);
 
   var getRandomItem = function (array) {
     return array[Math.floor(Math.random() * array.length)];
@@ -22,8 +22,8 @@
         type: getRandomItem(offerTypes),
       },
       location: {
-        x: getRandomNumber(MapRect.LEFT, MapRect.RIGHT),
-        y: getRandomNumber(MapRect.TOP, MapRect.BOTTOM),
+        x: getRandomNumber(types.MapRect.LEFT, types.MapRect.RIGHT),
+        y: getRandomNumber(types.MapRect.TOP, types.MapRect.BOTTOM),
       },
     };
   };
@@ -42,4 +42,4 @@
   window.mock = {
     load: getPins,
   };
-})(window.types.offerTypeToMinPrice, window.types.MapRect);
+})(window.types);

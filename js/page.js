@@ -1,32 +1,32 @@
 'use strict';
 
-(function () {
+(function (utils, map, mock, pin, ad, filter) {
   var mapSection = document.querySelector('.map');
   var pinsContainer = mapSection.querySelector('.map__pins');
   var mainPinButton = mapSection.querySelector('.map__pin--main');
 
-  var renderPinsOnce = window.utils.once(function () {
-    window.map.renderPins(pinsContainer, window.mock.load());
+  var renderPinsOnce = utils.once(function () {
+    map.renderPins(pinsContainer, mock.load());
   });
 
   var activate = function () {
-    window.ad.activate();
-    window.filter.activate();
+    ad.activate();
+    filter.activate();
     mapSection.classList.remove('map--faded');
 
     renderPinsOnce();
   };
 
   var deactivate = function () {
-    window.ad.deactivate();
-    window.filter.deactivate();
+    ad.deactivate();
+    filter.deactivate();
     mapSection.classList.add('map--faded');
   };
 
   deactivate();
-  mainPinButton.addEventListener('mousedown', window.pin.mainPinDragStartHandler);
+  mainPinButton.addEventListener('mousedown', pin.mainPinDragStartHandler);
 
   window.page = {
     activate: activate,
   };
-})();
+})(window.utils, window.map, window.mock, window.pin, window.ad, window.filter);
