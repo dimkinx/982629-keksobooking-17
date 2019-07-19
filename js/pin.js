@@ -1,6 +1,6 @@
 'use strict';
 
-(function (types, utils, page, ad) {
+(function (types, utils) {
   var mapSection = document.querySelector('.map');
   var mainPinButton = mapSection.querySelector('.map__pin--main');
 
@@ -16,10 +16,6 @@
     mainPinButton.style.top = y + 'px';
   };
 
-  var activatePageOnce = utils.once(function () {
-    page.activate();
-  });
-
   var mainPinStartHandler = function () {
     return {
       x: mainPinButton.offsetLeft,
@@ -33,12 +29,12 @@
 
     renderMainPin(x, y);
 
-    ad.renderAddress(getMainPinPosition(types.MainPinSize.HEIGHT));
-    activatePageOnce();
+    window.ad.renderAddress(getMainPinPosition(types.MainPinSize.HEIGHT));
+    window.page.activateOnce();
   };
 
   var mainPinEndHandler = function () {
-    activatePageOnce();
+    window.page.activateOnce();
   };
 
   var mainPinDragStartHandler = utils.makeDragStart(
@@ -47,8 +43,12 @@
       mainPinEndHandler
   );
 
+  var initMainPin = function () {
+    mainPinButton.addEventListener('mousedown', mainPinDragStartHandler);
+  };
+
   window.pin = {
     getMainPinPosition: getMainPinPosition,
-    mainPinDragStartHandler: mainPinDragStartHandler,
+    initMainPin: initMainPin,
   };
-})(window.types, window.utils, window.page, window.ad);
+})(window.types, window.utils);

@@ -1,6 +1,23 @@
 'use strict';
 
 (function () {
+  var Request = {
+    TIMEOUT: 10000,
+    Type: 'json',
+    Url: {
+      GET: 'https://js.dump.academy/keksobooking/data',
+      POST: 'https://js.dump.academy/keksobooking',
+    },
+    Method: {
+      GET: 'GET',
+      POST: 'POST',
+    },
+    Code: {
+      OK: 200,
+      MULTIPLE_CHOICES: 300,
+    },
+  };
+
   var PinSize = {
     WIDTH: 50,
     HEIGHT: 70,
@@ -35,6 +52,7 @@
   };
 
   window.types = {
+    Req: Request,
     PinSize: PinSize,
     MainPinSize: MainPinSize,
     MapRect: MapRect,

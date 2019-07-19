@@ -1,6 +1,6 @@
 'use strict';
 
-(function (types, utils, pin) {
+(function (types, utils) {
   var form = document.querySelector('.ad-form');
   var fields = form.querySelectorAll('fieldset');
   var addressInput = form.querySelector('#address');
@@ -8,10 +8,6 @@
   var priceInput = form.querySelector('#price');
   var timeInSelect = form.querySelector('#timein');
   var timeOutSelect = form.querySelector('#timeout');
-
-  var renderAddress = function (location) {
-    addressInput.value = location.x + ', ' + location.y;
-  };
 
   var priceInputChangeHandler = function (evt) {
     var minPrice = types.offerTypeToMinPrice[evt.target.value];
@@ -27,18 +23,22 @@
     timeOutSelect.value = timeInSelect.value;
   };
 
+  var renderAddress = function (location) {
+    addressInput.value = location.x + ', ' + location.y;
+  };
+
   var activate = function () {
     form.classList.remove('ad-form--disabled');
     fields.forEach(utils.unsetDisabled);
 
-    renderAddress(pin.getMainPinPosition(types.MainPinSize.HEIGHT));
+    renderAddress(window.pin.getMainPinPosition(types.MainPinSize.HEIGHT));
   };
 
   var deactivate = function () {
     form.classList.add('ad-form--disabled');
     fields.forEach(utils.setDisabled);
 
-    renderAddress(pin.getMainPinPosition(types.MainPinSize.RADIUS));
+    renderAddress(window.pin.getMainPinPosition(types.MainPinSize.RADIUS));
   };
 
   typeSelect.addEventListener('change', priceInputChangeHandler);
@@ -50,4 +50,4 @@
     activate: activate,
     deactivate: deactivate,
   };
-})(window.types, window.utils, window.pin);
+})(window.types, window.utils);
