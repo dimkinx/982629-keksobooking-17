@@ -12,7 +12,7 @@
     pin.style.left = (ad.location.x - types.PinSize.RADIUS) + 'px';
     pin.style.top = ad.location.y + 'px';
     image.src = ad.author.avatar;
-    image.alt = ad.offer.type;
+    image.alt = ad.offer.title;
 
     return pin;
   };
@@ -27,18 +27,22 @@
     pinsContainer.appendChild(fragment);
   };
 
-  var renderPinsOnce = utils.once(function () {
-    var loadHandler = function (pins) {
-      renderPins(pins);
-    };
+  var loadHandler = function (data) {
+    renderPins(data);
+  };
 
-    window.backend.load(loadHandler);
-  });
+  var errorHandler = function (errorMessage) {
+    window.message.error(errorMessage);
+  };
+
+  var drawPins = function () {
+    window.backend.load(loadHandler, errorHandler);
+  };
 
   var activate = function () {
     mapSection.classList.remove('map--faded');
 
-    renderPinsOnce();
+    drawPins();
   };
 
   var deactivate = function () {
@@ -48,5 +52,6 @@
   window.map = {
     activate: activate,
     deactivate: deactivate,
+    drawPins: drawPins,
   };
 })(window.types, window.utils);

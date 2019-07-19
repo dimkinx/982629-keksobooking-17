@@ -3,7 +3,7 @@
 (function (Req) {
   var createRequest = function (loadHandler, errorHandler) {
     var xhr = new XMLHttpRequest();
-    xhr.responseType = Req.Type;
+    xhr.responseType = Req.TYPE;
     xhr.timeout = Req.TIMEOUT;
 
     errorHandler = errorHandler || function (errorMessage) {
@@ -27,6 +27,7 @@
     xhr.addEventListener('error', function () {
       errorHandler('Произошла ошибка соединения');
     });
+
     xhr.addEventListener('timeout', function () {
       errorHandler('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });

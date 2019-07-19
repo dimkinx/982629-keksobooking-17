@@ -2,8 +2,8 @@
 
 (function () {
   var Request = {
-    TIMEOUT: 10000,
-    Type: 'json',
+    TIMEOUT: 1000,
+    TYPE: 'json',
     Url: {
       GET: 'https://js.dump.academy/keksobooking/data',
       POST: 'https://js.dump.academy/keksobooking',
