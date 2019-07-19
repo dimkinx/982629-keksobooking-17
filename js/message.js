@@ -1,12 +1,13 @@
 'use strict';
 
-(function (utils) {
-  var footerElement = document.querySelector('footer');
+(function () {
+  var mainElement = document.querySelector('main');
+  var mainElementFirstChild = mainElement.firstChild;
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
 
   var error = function (errorMessage) {
     var errorElement = errorTemplate.cloneNode(true);
-    utils.insertAfter(errorElement, footerElement);
+    mainElement.insertBefore(errorElement, mainElementFirstChild);
 
     errorElement.querySelector('.error__message').textContent = errorMessage;
 
@@ -22,4 +23,4 @@
   window.message = {
     error: error,
   };
-})(window.utils);
+})();

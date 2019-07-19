@@ -47,15 +47,10 @@
     };
   };
 
-  var insertAfter = function (newNode, referenceNode) {
-    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
-  };
-
   window.utils = {
     setDisabled: setDisabled,
     unsetDisabled: unsetDisabled,
     once: once,
     makeDragStart: makeDragStart,
-    insertAfter: insertAfter,
   };
 })();

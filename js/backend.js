@@ -29,7 +29,7 @@
     });
 
     xhr.addEventListener('timeout', function () {
-      errorHandler('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+      errorHandler('Запрос не успел выполниться за ' + xhr.timeout + ' мс');
     });
 
     return xhr;
