@@ -1,6 +1,6 @@
 'use strict';
 
-(function (map, data, ad) {
+(function (map, data, filter, ad) {
   var activate = function () {
     map.activate();
     data.loadPinsData();
@@ -9,6 +9,7 @@
 
   var deactivate = function () {
     map.deactivate();
+    filter.deactivate();
     ad.deactivate();
   };
 
@@ -16,4 +17,4 @@
     activate: activate,
     deactivate: deactivate,
   };
-})(window.map, window.data, window.ad);
+})(window.map, window.data, window.filter, window.ad);
