@@ -1,32 +1,20 @@
 'use strict';
 
-(function () {
-  var mapSection = document.querySelector('.map');
-  var pinsContainer = mapSection.querySelector('.map__pins');
-  var mainPinButton = mapSection.querySelector('.map__pin--main');
-
-  var renderPinsOnce = window.utils.once(function () {
-    window.map.renderPins(pinsContainer, window.mock.load());
-  });
-
+(function (map, data, filter, ad) {
   var activate = function () {
-    window.ad.activate();
-    window.filter.activate();
-    mapSection.classList.remove('map--faded');
-
-    renderPinsOnce();
+    map.activate();
+    data.loadPinsData();
+    ad.activate();
   };
 
   var deactivate = function () {
-    window.ad.deactivate();
-    window.filter.deactivate();
-    mapSection.classList.add('map--faded');
+    map.deactivate();
+    filter.deactivate();
+    ad.deactivate();
   };
-
-  deactivate();
-  mainPinButton.addEventListener('mousedown', window.pin.mainPinDragStartHandler);
 
   window.page = {
     activate: activate,
+    deactivate: deactivate,
   };
-})();
+})(window.map, window.data, window.filter, window.ad);

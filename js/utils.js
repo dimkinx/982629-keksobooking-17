@@ -9,18 +9,7 @@
     element.disabled = false;
   };
 
-  var once = function (fn) {
-    var result;
-    return function () {
-      if (fn) {
-        result = fn();
-        fn = null;
-      }
-      return result;
-    };
-  };
-
-  var makeDragStart = function (startHandler, moveHandler, endHandler) {
+  var makeDragStart = function (startHandler, moveHandler) {
     return function (evt) {
       evt.preventDefault();
 
@@ -39,7 +28,6 @@
       var mouseUpHandler = function (upEvt) {
         upEvt.preventDefault();
         document.removeEventListener('mousemove', mouseMoveHandler);
-        endHandler();
       };
 
       document.addEventListener('mousemove', mouseMoveHandler);
@@ -47,10 +35,26 @@
     };
   };
 
+  var makeDragOnce = function (dragHandler) {
+    return function (evt) {
+      evt.preventDefault();
+
+      var mouseDragHandler = function (dragEvt) {
+        dragEvt.preventDefault();
+        document.removeEventListener('mousemove', mouseDragHandler);
+        document.removeEventListener('mouseup', mouseDragHandler);
+        dragHandler(dragEvt);
+      };
+
+      document.addEventListener('mousemove', mouseDragHandler);
+      document.addEventListener('mouseup', mouseDragHandler);
+    };
+  };
+
   window.utils = {
     setDisabled: setDisabled,
     unsetDisabled: unsetDisabled,
-    once: once,
     makeDragStart: makeDragStart,
+    makeDragOnce: makeDragOnce,
   };
 })();

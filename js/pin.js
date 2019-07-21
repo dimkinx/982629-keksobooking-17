@@ -1,6 +1,6 @@
 'use strict';
 
-(function (MainPinSize, MainPinRect) {
+(function (MainPinSize, MainPinRect, utils) {
   var mapSection = document.querySelector('.map');
   var mainPinButton = mapSection.querySelector('.map__pin--main');
 
@@ -16,10 +16,6 @@
     mainPinButton.style.top = y + 'px';
   };
 
-  var activatePageOnce = window.utils.once(function () {
-    window.page.activate();
-  });
-
   var mainPinStartHandler = function () {
     return {
       x: mainPinButton.offsetLeft,
@@ -34,21 +30,26 @@
     renderMainPin(x, y);
 
     window.ad.renderAddress(getMainPinPosition(MainPinSize.HEIGHT));
-    activatePageOnce();
   };
 
-  var mainPinEndHandler = function () {
-    activatePageOnce();
-  };
-
-  var mainPinDragStartHandler = window.utils.makeDragStart(
+  var mainPinDragStartHandler = utils.makeDragStart(
       mainPinStartHandler,
-      mainPinMoveHandler,
-      mainPinEndHandler
+      mainPinMoveHandler
   );
+
+  var mainPinChangeHandler = function () {
+    window.page.activate();
+  };
+
+  var mainPinDragOnceHandler = utils.makeDragOnce(mainPinChangeHandler);
+
+  var initMainPin = function () {
+    mainPinButton.addEventListener('mousedown', mainPinDragOnceHandler, {once: true});
+    mainPinButton.addEventListener('mousedown', mainPinDragStartHandler);
+  };
 
   window.pin = {
     getMainPinPosition: getMainPinPosition,
-    mainPinDragStartHandler: mainPinDragStartHandler,
+    initMainPin: initMainPin,
   };
-})(window.types.MainPinSize, window.types.MainPinRect);
+})(window.types.MainPinSize, window.types.MainPinRect, window.utils);

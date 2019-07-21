@@ -1,6 +1,23 @@
 'use strict';
 
 (function () {
+  var Request = {
+    TIMEOUT: 1000,
+    TYPE: 'json',
+    Url: {
+      GET: 'https://js.dump.academy/keksobooking/data',
+      POST: 'https://js.dump.academy/keksobooking',
+    },
+    Method: {
+      GET: 'GET',
+      POST: 'POST',
+    },
+    Code: {
+      OK: 200,
+      MULTIPLE_CHOICES: 300,
+    },
+  };
+
   var PinSize = {
     WIDTH: 50,
     HEIGHT: 70,
@@ -34,11 +51,23 @@
     palace: 10000,
   };
 
+  var Keyboard = {
+    isEnterKey: function (evt) {
+      return evt.key === 'Enter';
+    },
+    isEscapeKey: function (evt) {
+      return evt.key === 'Escape'
+        || evt.key === 'Esc';
+    },
+  };
+
   window.types = {
+    Request: Request,
     PinSize: PinSize,
     MainPinSize: MainPinSize,
     MapRect: MapRect,
     MainPinRect: MainPinRect,
     offerTypeToMinPrice: offerTypeToMinPrice,
+    Keyboard: Keyboard,
   };
 })();
