@@ -10,7 +10,7 @@
     var image = pin.querySelector('img');
 
     pin.style.left = (ad.location.x - PinSize.RADIUS) + 'px';
-    pin.style.top = ad.location.y + 'px';
+    pin.style.top = (ad.location.y - PinSize.HEIGHT) + 'px';
     image.src = ad.author.avatar;
     image.alt = ad.offer.title;
 
