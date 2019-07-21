@@ -51,12 +51,23 @@
     palace: 10000,
   };
 
+  var Keyboard = {
+    isEnterKey: function (evt) {
+      return evt.key === 'Enter';
+    },
+    isEscapeKey: function (evt) {
+      return evt.key === 'Escape'
+        || evt.key === 'Esc';
+    },
+  };
+
   window.types = {
-    Req: Request,
+    Request: Request,
     PinSize: PinSize,
     MainPinSize: MainPinSize,
     MapRect: MapRect,
     MainPinRect: MainPinRect,
     offerTypeToMinPrice: offerTypeToMinPrice,
+    Keyboard: Keyboard,
   };
 })();

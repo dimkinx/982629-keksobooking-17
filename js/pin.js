@@ -1,12 +1,12 @@
 'use strict';
 
-(function (types, utils) {
+(function (MainPinSize, MainPinRect, utils) {
   var mapSection = document.querySelector('.map');
   var mainPinButton = mapSection.querySelector('.map__pin--main');
 
   var getMainPinPosition = function (verticalPoint) {
     return {
-      x: mainPinButton.offsetLeft + types.MainPinSize.RADIUS,
+      x: mainPinButton.offsetLeft + MainPinSize.RADIUS,
       y: mainPinButton.offsetTop + verticalPoint,
     };
   };
@@ -24,26 +24,27 @@
   };
 
   var mainPinMoveHandler = function (x, y) {
-    x = Math.min(Math.max(x, types.MainPinRect.LEFT), types.MainPinRect.RIGHT);
-    y = Math.min(Math.max(y, types.MainPinRect.TOP), types.MainPinRect.BOTTOM);
+    x = Math.min(Math.max(x, MainPinRect.LEFT), MainPinRect.RIGHT);
+    y = Math.min(Math.max(y, MainPinRect.TOP), MainPinRect.BOTTOM);
 
     renderMainPin(x, y);
 
-    window.ad.renderAddress(getMainPinPosition(types.MainPinSize.HEIGHT));
-    window.page.activateOnce();
-  };
-
-  var mainPinEndHandler = function () {
-    window.page.activateOnce();
+    window.ad.renderAddress(getMainPinPosition(MainPinSize.HEIGHT));
   };
 
   var mainPinDragStartHandler = utils.makeDragStart(
       mainPinStartHandler,
-      mainPinMoveHandler,
-      mainPinEndHandler
+      mainPinMoveHandler
   );
 
+  var mainPinChangeHandler = function () {
+    window.page.activate();
+  };
+
+  var mainPinDragOnceHandler = utils.makeDragOnce(mainPinChangeHandler);
+
   var initMainPin = function () {
+    mainPinButton.addEventListener('mousedown', mainPinDragOnceHandler, {once: true});
     mainPinButton.addEventListener('mousedown', mainPinDragStartHandler);
   };
 
@@ -51,4 +52,4 @@
     getMainPinPosition: getMainPinPosition,
     initMainPin: initMainPin,
   };
-})(window.types, window.utils);
+})(window.types.MainPinSize, window.types.MainPinRect, window.utils);

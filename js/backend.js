@@ -1,18 +1,18 @@
 'use strict';
 
-(function (Req) {
+(function (Request) {
   var createRequest = function (loadHandler, errorHandler) {
     var xhr = new XMLHttpRequest();
-    xhr.responseType = Req.TYPE;
-    xhr.timeout = Req.TIMEOUT;
+    xhr.responseType = Request.TYPE;
+    xhr.timeout = Request.TIMEOUT;
 
     errorHandler = errorHandler || function (errorMessage) {
       throw new Error(errorMessage);
     };
 
     var isError = function () {
-      return xhr.status < Req.Code.OK
-          || xhr.status > Req.Code.MULTIPLE_CHOICES;
+      return xhr.status < Request.Code.OK
+          || xhr.status > Request.Code.MULTIPLE_CHOICES;
     };
 
     xhr.addEventListener('load', function () {
@@ -37,13 +37,13 @@
 
   var load = function (loadHandler, errorHandler) {
     var xhr = createRequest(loadHandler, errorHandler);
-    xhr.open(Req.Method.GET, Req.Url.GET);
+    xhr.open(Request.Method.GET, Request.Url.GET);
     xhr.send();
   };
 
   var save = function (data, loadHandler, errorHandler) {
     var xhr = createRequest(loadHandler, errorHandler);
-    xhr.open(Req.Method.POST, Req.Url.POST);
+    xhr.open(Request.Method.POST, Request.Url.POST);
     xhr.send(data);
   };
 
@@ -51,4 +51,4 @@
     load: load,
     save: save,
   };
-})(window.types.Req);
+})(window.types.Request);
