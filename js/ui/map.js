@@ -1,6 +1,9 @@
 'use strict';
 
-(function (PinSize) {
+(function () {
+  var PinSize = window.import('PinSize').from('types');
+  var makeFragmentRender = window.import('makeFragmentRender').from('util.factories');
+
   var mapSection = document.querySelector('.map');
   var pinsContainer = mapSection.querySelector('.map__pins');
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -17,14 +20,10 @@
     return pin;
   };
 
+  var getPinFragment = makeFragmentRender(createPin);
+
   var renderPins = function (pins) {
-    var fragment = document.createDocumentFragment();
-
-    pins.forEach(function (pin) {
-      fragment.appendChild(createPin(pin));
-    });
-
-    pinsContainer.appendChild(fragment);
+    pinsContainer.appendChild(getPinFragment(pins));
   };
 
   var activate = function () {
@@ -35,9 +34,9 @@
     mapSection.classList.add('map--faded');
   };
 
-  window.map = {
+  window.export({
     renderPins: renderPins,
     activate: activate,
     deactivate: deactivate,
-  };
-})(window.types.PinSize);
+  }).to('ui.map');
+})();
