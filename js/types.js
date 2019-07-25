@@ -1,6 +1,10 @@
 'use strict';
 
 (function () {
+  var FilterParam = {
+    PINS_NUM: 5,
+  };
+
   var Request = {
     TIMEOUT: 1000,
     TYPE: 'json',
@@ -52,6 +56,7 @@
   };
 
   window.export({
+    FilterParam: FilterParam,
     Request: Request,
     PinSize: PinSize,
     MainPinSize: MainPinSize,

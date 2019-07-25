@@ -2,13 +2,12 @@
 
 (function () {
   var map = window.import('*').from('ui.map');
-  var loadPinsData = window.import('loadPinsData').from('net.data');
   var filter = window.import('*').from('ui.filter');
   var ad = window.import('*').from('ui.ad');
 
   var activate = function () {
     map.activate();
-    loadPinsData();
+    filter.activate();
     ad.activate();
   };
 

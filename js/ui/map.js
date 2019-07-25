@@ -26,6 +26,14 @@
     pinsContainer.appendChild(getPinFragment(pins));
   };
 
+  var removePins = function () {
+    Array.from(pinsContainer
+      .querySelectorAll('button.map__pin:not(.map__pin--main)'))
+      .forEach(function (element) {
+        pinsContainer.removeChild(element);
+      });
+  };
+
   var activate = function () {
     mapSection.classList.remove('map--faded');
   };
@@ -36,6 +44,7 @@
 
   window.export({
     renderPins: renderPins,
+    removePins: removePins,
     activate: activate,
     deactivate: deactivate,
   }).to('ui.map');
