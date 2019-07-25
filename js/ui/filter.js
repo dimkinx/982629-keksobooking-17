@@ -16,6 +16,9 @@
   var loadHandler = function (data) {
     pinsData = data;
     map.renderPins(filtrate(pinsData));
+
+    inputElements.forEach(dom.unsetDisabled);
+    dom.showElement(filterElement);
   };
 
   var errorHandler = function (errorMessage) {
@@ -24,7 +27,7 @@
   };
 
   var tryButtonHandler = function () {
-    loadData(loadHandler, errorHandler);
+    activate();
   };
 
   var filterChangeHandler = function () {
@@ -34,9 +37,6 @@
 
   var activate = function () {
     loadData(loadHandler, errorHandler);
-
-    inputElements.forEach(dom.unsetDisabled);
-    dom.showElement(filterElement);
 
     inputElements.forEach(function (element) {
       element.addEventListener('change', filterChangeHandler);
