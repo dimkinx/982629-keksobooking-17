@@ -2,6 +2,7 @@
 
 (function () {
   var PinSize = window.import('PinSize').from('types');
+  var dom = window.import('*').from('util.dom');
   var makeFragmentRender = window.import('makeFragmentRender').from('util.factories');
 
   var mapSection = document.querySelector('.map');
@@ -27,10 +28,10 @@
   };
 
   var removePins = function () {
-    Array.from(pinsContainer
-      .querySelectorAll('button.map__pin:not(.map__pin--main)'))
+    pinsContainer
+      .querySelectorAll('button.map__pin:not(.map__pin--main)')
       .forEach(function (element) {
-        pinsContainer.removeChild(element);
+        dom.removeElement(element);
       });
   };
 

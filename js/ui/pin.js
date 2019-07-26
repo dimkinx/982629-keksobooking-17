@@ -5,13 +5,13 @@
   var MainPinRect = window.import('MainPinRect').from('types');
   var factories = window.import('makeDragStart', 'makeDragOnce').from('util.factories');
 
-  var mapSection = document.querySelector('.map');
-  var mainPinButton = mapSection.querySelector('.map__pin--main');
+  var mapElement = document.querySelector('.map');
+  var mainPinButton = mapElement.querySelector('.map__pin--main');
 
-  var getMainPinPosition = function (verticalPoint) {
+  var getMainPinPosition = function (height) {
     return {
       x: mainPinButton.offsetLeft + MainPinSize.RADIUS,
-      y: mainPinButton.offsetTop + verticalPoint,
+      y: mainPinButton.offsetTop + height,
     };
   };
 
@@ -20,14 +20,14 @@
     mainPinButton.style.top = y + 'px';
   };
 
-  var initMainPin = function (changeHandler, moveHandler) {
-    var mainPinStartHandler = function () {
-      return {
-        x: mainPinButton.offsetLeft,
-        y: mainPinButton.offsetTop,
-      };
+  var mainPinStartHandler = function () {
+    return {
+      x: mainPinButton.offsetLeft,
+      y: mainPinButton.offsetTop,
     };
+  };
 
+  var initMainPin = function (changeHandler, moveHandler) {
     var mainPinDragHandler = function (x, y) {
       x = Math.min(Math.max(x, MainPinRect.LEFT), MainPinRect.RIGHT);
       y = Math.min(Math.max(y, MainPinRect.TOP), MainPinRect.BOTTOM);

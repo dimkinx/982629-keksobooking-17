@@ -3,21 +3,28 @@
 (function () {
   var FilterParam = window.import('FilterParam').from('types');
 
-  var mapSection = document.querySelector('.map');
-  var form = mapSection.querySelector('.map__filters');
+  var form = document.querySelector('.map__filters');
   var typeSelect = form.querySelector('#housing-type');
 
-  var filtrateByType = function (data) {
-    var typeValue = typeSelect.options[typeSelect.selectedIndex].value;
+  var getTypeSelect = function () {
+    return typeSelect.options[typeSelect.selectedIndex].value;
+  };
 
-    return typeValue === 'any'
-      ? data.slice(0, FilterParam.PINS_NUM)
-      : data.filter(function (pin) {
-        return String(pin.offer['type']) === typeValue;
-      }).slice(0, FilterParam.PINS_NUM);
+  var filterType = function (data) {
+    var type = getTypeSelect();
+
+    return type === 'any'
+      ? data
+      : data.filter(function (ad) {
+        return ad.offer.type === type;
+      });
+  };
+
+  var getFilteredAds = function (data) {
+    return filterType(data).slice(0, FilterParam.PIN_MAX);
   };
 
   window.export({
-    filtrate: filtrateByType,
+    getFilteredAds: getFilteredAds,
   }).to('net.dataFilter');
 })();

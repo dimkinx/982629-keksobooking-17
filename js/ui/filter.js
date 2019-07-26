@@ -3,22 +3,26 @@
 (function () {
   var dom = window.import('*').from('util.dom');
   var map = window.import('removePins', 'renderPins').from('ui.map');
+  var isElementShown = window.import('isElementShown').from('util.predicates');
   var loadData = window.import('load').from('net.backend');
   var createErrorMessage = window.import('createErrorMessage').from('net.errorMessage');
-  var filtrate = window.import('filtrate').from('net.dataFilter');
-
+  var getFilteredAds = window.import('getFilteredAds').from('net.dataFilter');
 
   var filterElement = document.querySelector('.map__filters-container');
   var inputElements = filterElement.querySelectorAll('.map__filter, .map__checkbox');
 
-  var pinsData = [];
+  var adsData = [];
 
   var loadHandler = function (data) {
-    pinsData = data;
-    map.renderPins(filtrate(pinsData));
+    adsData = data;
+    map.renderPins(getFilteredAds(adsData));
 
     inputElements.forEach(dom.unsetDisabled);
     dom.showElement(filterElement);
+
+    inputElements.forEach(function (element) {
+      element.addEventListener('change', filterChangeHandler);
+    });
   };
 
   var errorHandler = function (errorMessage) {
@@ -32,19 +36,11 @@
 
   var filterChangeHandler = function () {
     map.removePins();
-    map.renderPins(filtrate(pinsData));
+    map.renderPins(getFilteredAds(adsData));
   };
 
   var activate = function () {
     loadData(loadHandler, errorHandler);
-
-    inputElements.forEach(function (element) {
-      element.addEventListener('change', filterChangeHandler);
-    });
-  };
-
-  var isElementShown = function (elementCheck) {
-    return !elementCheck.classList.contains('hidden');
   };
 
   var removeListener = function (elementCheck, elements, evtHandler) {

@@ -2,7 +2,7 @@
 
 (function () {
   var FilterParam = {
-    PINS_NUM: 5,
+    PIN_MAX: 5,
   };
 
   var Request = {
