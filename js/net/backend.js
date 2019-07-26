@@ -1,6 +1,8 @@
 'use strict';
 
-(function (Request) {
+(function () {
+  var Request = window.import('Request').from('types');
+
   var createRequest = function (loadHandler, errorHandler) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = Request.TYPE;
@@ -47,8 +49,8 @@
     xhr.send(data);
   };
 
-  window.backend = {
+  window.export({
     load: load,
     save: save,
-  };
-})(window.types.Request);
+  }).to('net.backend');
+})();

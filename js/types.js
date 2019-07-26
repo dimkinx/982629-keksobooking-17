@@ -1,6 +1,10 @@
 'use strict';
 
 (function () {
+  var FilterParam = {
+    PIN_MAX: 5,
+  };
+
   var Request = {
     TIMEOUT: 1000,
     TYPE: 'json',
@@ -51,23 +55,13 @@
     palace: 10000,
   };
 
-  var Keyboard = {
-    isEnterKey: function (evt) {
-      return evt.key === 'Enter';
-    },
-    isEscapeKey: function (evt) {
-      return evt.key === 'Escape'
-        || evt.key === 'Esc';
-    },
-  };
-
-  window.types = {
+  window.export({
+    FilterParam: FilterParam,
     Request: Request,
     PinSize: PinSize,
     MainPinSize: MainPinSize,
     MapRect: MapRect,
     MainPinRect: MainPinRect,
     offerTypeToMinPrice: offerTypeToMinPrice,
-    Keyboard: Keyboard,
-  };
+  }).to('types');
 })();

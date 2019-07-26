@@ -1,29 +1,30 @@
 'use strict';
 
-(function (Keyboard) {
+(function () {
+  var isEscapeKey = window.import('isEscapeKey').from('util.predicates');
+
   var mainElement = document.querySelector('main');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
 
-  var noop = function () {};
-
-  var error = function (errorMessage, callback) {
-    callback = callback || noop;
-
+  var createErrorMessage = function (errorMessage, tryButtonHandler) {
     var errorElement = errorTemplate.cloneNode(true);
+    var errorButton = errorElement.querySelector('.error__button');
+
     errorElement.querySelector('.error__message').textContent = errorMessage;
+
     mainElement.appendChild(errorElement);
 
     var close = function () {
       mainElement.removeChild(errorElement);
 
-      errorElement.querySelector('.error__button').removeEventListener('click', buttonClickHandler);
+      errorButton.removeEventListener('click', buttonClickHandler);
       errorElement.removeEventListener('click', overlayClickHandler);
       document.removeEventListener('keydown', escPressHandler);
     };
 
     var buttonClickHandler = function () {
       close();
-      callback();
+      tryButtonHandler();
     };
 
     var overlayClickHandler = function () {
@@ -31,15 +32,15 @@
     };
 
     var escPressHandler = function (evt) {
-      return Keyboard.isEscapeKey(evt) && close();
+      return isEscapeKey(evt) && close();
     };
 
-    errorElement.querySelector('.error__button').addEventListener('click', buttonClickHandler);
+    errorButton.addEventListener('click', buttonClickHandler);
     errorElement.addEventListener('click', overlayClickHandler);
     document.addEventListener('keydown', escPressHandler);
   };
 
-  window.message = {
-    error: error,
-  };
-})(window.types.Keyboard);
+  window.export({
+    createErrorMessage: createErrorMessage,
+  }).to('net.errorMessage');
+})();

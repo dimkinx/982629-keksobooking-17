@@ -1,9 +1,13 @@
 'use strict';
 
-(function (map, data, filter, ad) {
+(function () {
+  var map = window.import('*').from('ui.map');
+  var filter = window.import('*').from('ui.filter');
+  var ad = window.import('*').from('ui.ad');
+
   var activate = function () {
     map.activate();
-    data.loadPinsData();
+    filter.activate();
     ad.activate();
   };
 
@@ -13,8 +17,8 @@
     ad.deactivate();
   };
 
-  window.page = {
+  window.export({
     activate: activate,
     deactivate: deactivate,
-  };
-})(window.map, window.data, window.filter, window.ad);
+  }).to('ui.page');
+})();
