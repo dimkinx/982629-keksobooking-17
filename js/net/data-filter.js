@@ -5,18 +5,38 @@
 
   var form = document.querySelector('.map__filters');
 
-  var getStateFilter = function (filter, ad) {
-    return filter.value === ad.offer.type;
+  var getStateFilter = {
+    'housing-type': function (ad, filter) {
+      return ad.offer.type === filter.value;
+    },
+    'housing-price': function (ad, filter) {
+      return ad.offer.price >= FilterParam.priceDict[filter.value].min
+        && ad.offer.price < FilterParam.priceDict[filter.value].max;
+    },
+    'housing-rooms': function (ad, filter) {
+      return ad.offer.rooms === +filter.value;
+    },
+    'housing-guests': function (ad, filter) {
+      return ad.offer.guests === +filter.value;
+    },
+    'housing-features': function (ad, filter) {
+      var checkboxElements = Array.prototype.slice.call(filter.querySelectorAll('input[type=checkbox]:checked'));
+
+      return checkboxElements.every(function (checkbox) {
+        return ad.offer.features.some(function (feature) {
+          return feature === checkbox.value;
+        });
+      });
+    }
   };
 
   var isCheckPass = function (ad) {
-    var filterElements = [];
-    filterElements[0] = Array.prototype.slice.call(form.children).shift();
+    var filterElements = Array.prototype.slice.call(form.children);
 
     return filterElements.every(function (filter) {
       return filter.value === 'any'
         ? true
-        : getStateFilter(filter, ad);
+        : getStateFilter[filter.id](ad, filter);
     });
   };
 
