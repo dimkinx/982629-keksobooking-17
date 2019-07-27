@@ -4,24 +4,28 @@
   var FilterParam = window.import('FilterParam').from('types');
 
   var form = document.querySelector('.map__filters');
-  var typeSelect = form.querySelector('#housing-type');
 
-  var getTypeSelect = function () {
-    return typeSelect.options[typeSelect.selectedIndex].value;
+  var getStateFilter = function (filter, ad) {
+    return filter.value === ad.offer.type;
   };
 
-  var filterType = function (data) {
-    var type = getTypeSelect();
+  var isCheckPass = function (ad) {
+    var filterElements = [];
+    filterElements[0] = Array.prototype.slice.call(form.children).shift();
 
-    return data.filter(function (ad) {
-      return type === 'any'
+    return filterElements.every(function (filter) {
+      return filter.value === 'any'
         ? true
-        : type === ad.offer.type;
+        : getStateFilter(filter, ad);
     });
   };
 
+  var filterData = function (data) {
+    return data.filter(isCheckPass);
+  };
+
   var getFilteredAds = function (data) {
-    var filteredData = filterType(data);
+    var filteredData = filterData(data);
     if (filteredData.length > FilterParam.PIN_MAX) {
       filteredData.length = FilterParam.PIN_MAX;
     }
