@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var DEBOUNCE_INTERVAL = 500;
+
   var FilterParam = {
     PIN_MAX: 5,
     priceDict: {
@@ -70,6 +72,7 @@
   };
 
   window.export({
+    DEBOUNCE_INTERVAL: DEBOUNCE_INTERVAL,
     FilterParam: FilterParam,
     Request: Request,
     PinSize: PinSize,

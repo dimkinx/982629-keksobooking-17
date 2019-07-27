@@ -7,6 +7,7 @@
   var loadData = window.import('load').from('net.backend');
   var createErrorMessage = window.import('createErrorMessage').from('net.errorMessage');
   var getFilteredAds = window.import('getFilteredAds').from('net.dataFilter');
+  var debounce = window.import('debounce').from('util.debounce');
 
   var filterElement = document.querySelector('.map__filters-container');
   var inputElements = filterElement.querySelectorAll('.map__filter, .map__checkbox');
@@ -26,7 +27,7 @@
     dom.showElement(filterElement);
 
     inputElements.forEach(function (element) {
-      element.addEventListener('change', filterChangeHandler);
+      element.addEventListener('change', debounce(filterChangeHandler));
     });
   };
 
