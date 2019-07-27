@@ -13,15 +13,20 @@
   var filterType = function (data) {
     var type = getTypeSelect();
 
-    return type === 'any'
-      ? data
-      : data.filter(function (ad) {
-        return ad.offer.type === type;
-      });
+    return data.filter(function (ad) {
+      return type === 'any'
+        ? true
+        : type === ad.offer.type;
+    });
   };
 
   var getFilteredAds = function (data) {
-    return filterType(data).slice(0, FilterParam.PIN_MAX);
+    var filteredData = filterType(data);
+    if (filteredData.length > FilterParam.PIN_MAX) {
+      filteredData.length = FilterParam.PIN_MAX;
+    }
+
+    return filteredData;
   };
 
   window.export({

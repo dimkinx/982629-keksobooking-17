@@ -3,6 +3,20 @@
 (function () {
   var FilterParam = {
     PIN_MAX: 5,
+    priceDict: {
+      low: {
+        min: 0,
+        max: 1000,
+      },
+      middle: {
+        min: 10000,
+        max: 50000,
+      },
+      high: {
+        min: 50000,
+        max: Number.POSITIVE_INFINITY,
+      }
+    },
   };
 
   var Request = {

@@ -13,6 +13,11 @@
 
   var adsData = [];
 
+  var filterChangeHandler = function () {
+    map.removePins();
+    map.renderPins(getFilteredAds(adsData));
+  };
+
   var loadHandler = function (data) {
     adsData = data;
     map.renderPins(getFilteredAds(adsData));
@@ -32,11 +37,6 @@
 
   var tryButtonHandler = function () {
     activate();
-  };
-
-  var filterChangeHandler = function () {
-    map.removePins();
-    map.renderPins(getFilteredAds(adsData));
   };
 
   var activate = function () {
