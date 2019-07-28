@@ -1,15 +1,14 @@
 'use strict';
 
 (function () {
-  var deactivatePage = window.import('deactivate').from('ui.page');
-  var activatePage = window.import('activate').from('ui.page');
+  var page = window.import('*').from('ui.page');
   var renderAddress = window.import('renderAddress').from('ui.ad');
   var initMainPin = window.import('initMainPin').from('ui.pin');
 
-  deactivatePage();
+  page.deactivate();
 
   var changePinHandler = function () {
-    activatePage();
+    page.activate();
   };
 
   var movePinHandler = function (coords) {

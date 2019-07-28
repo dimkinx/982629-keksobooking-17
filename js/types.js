@@ -1,8 +1,9 @@
 'use strict';
 
 (function () {
-  var FilterParam = {
-    PIN_MAX: 5,
+  var HousePrice = {
+    LOW: 10000,
+    HIGH: 50000,
   };
 
   var Request = {
@@ -56,7 +57,7 @@
   };
 
   window.export({
-    FilterParam: FilterParam,
+    HousePrice: HousePrice,
     Request: Request,
     PinSize: PinSize,
     MainPinSize: MainPinSize,
