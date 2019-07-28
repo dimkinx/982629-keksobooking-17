@@ -19,15 +19,17 @@
     map.renderPins(getFilteredAds(adsData));
   };
 
+  var debouncedFilterChangeHandler = debounce(filterChangeHandler);
+
   var loadHandler = function (data) {
     adsData = data;
-    map.renderPins(getFilteredAds(adsData));
+    map.renderPins(adsData);
 
     inputElements.forEach(dom.unsetDisabled);
     dom.showElement(filterElement);
 
     inputElements.forEach(function (element) {
-      element.addEventListener('change', debounce(filterChangeHandler));
+      element.addEventListener('change', debouncedFilterChangeHandler);
     });
   };
 
@@ -54,7 +56,7 @@
     inputElements.forEach(dom.setDisabled);
     dom.hideElement(filterElement);
 
-    removeListener(filterElement, inputElements, filterChangeHandler);
+    removeListener(filterElement, inputElements, debouncedFilterChangeHandler);
   };
 
   window.export({

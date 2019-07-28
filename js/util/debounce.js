@@ -1,21 +1,23 @@
 'use strict';
 
 (function () {
-  var DEBOUNCE_INTERVAL = window.import('DEBOUNCE_INTERVAL').from('types');
+  var DEBOUNCE_DELAY = window.import('DEBOUNCE_DELAY').from('constants');
 
-  var debounce = function (callback) {
-    var lastTimeout = null;
+  var debounce = function (delayHandler, delay) {
+    delay = delay || DEBOUNCE_DELAY;
+
+    var timeoutId = 0;
 
     return function () {
       var parameters = arguments;
 
-      if (lastTimeout) {
-        clearTimeout(lastTimeout);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
       }
 
-      lastTimeout = setTimeout(function () {
-        callback.apply(null, parameters);
-      }, DEBOUNCE_INTERVAL);
+      timeoutId = setTimeout(function () {
+        delayHandler.apply(null, parameters);
+      }, delay);
     };
   };
 

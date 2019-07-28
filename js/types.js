@@ -1,24 +1,9 @@
 'use strict';
 
 (function () {
-  var DEBOUNCE_INTERVAL = 500;
-
-  var FilterParam = {
-    PIN_MAX: 5,
-    priceDict: {
-      low: {
-        min: 0,
-        max: 1000,
-      },
-      middle: {
-        min: 10000,
-        max: 50000,
-      },
-      high: {
-        min: 50000,
-        max: Number.POSITIVE_INFINITY,
-      }
-    },
+  var HousePrice = {
+    FIRST_LIMIT: 10000,
+    SECOND_LIMIT: 50000,
   };
 
   var Request = {
@@ -72,8 +57,7 @@
   };
 
   window.export({
-    DEBOUNCE_INTERVAL: DEBOUNCE_INTERVAL,
-    FilterParam: FilterParam,
+    HousePrice: HousePrice,
     Request: Request,
     PinSize: PinSize,
     MainPinSize: MainPinSize,

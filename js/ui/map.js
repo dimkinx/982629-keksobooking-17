@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var PIN_MAX = window.import('PIN_MAX').from('constants');
   var PinSize = window.import('PinSize').from('types');
   var dom = window.import('*').from('util.dom');
   var makeFragmentRender = window.import('makeFragmentRender').from('util.factories');
@@ -21,7 +22,7 @@
     return pin;
   };
 
-  var getPinFragment = makeFragmentRender(createPin);
+  var getPinFragment = makeFragmentRender(createPin, PIN_MAX);
 
   var renderPins = function (pins) {
     pinsContainer.appendChild(getPinFragment(pins));

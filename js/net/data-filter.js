@@ -1,17 +1,30 @@
 'use strict';
 
 (function () {
-  var FilterParam = window.import('FilterParam').from('types');
+  var HousePrice = window.import('HousePrice').from('types');
 
   var form = document.querySelector('.map__filters');
 
-  var getStateFilter = {
+  var filterEvery = Array.prototype.every;
+
+  var priceToLimits = {
+    low: function (ad) {
+      return ad.offer.price < HousePrice.FIRST_LIMIT;
+    },
+    middle: function (ad) {
+      return ad.offer.price >= HousePrice.FIRST_LIMIT && ad.offer.price < HousePrice.SECOND_LIMIT;
+    },
+    high: function (ad) {
+      return ad.offer.price >= HousePrice.SECOND_LIMIT;
+    },
+  };
+
+  var filterToRules = {
     'housing-type': function (ad, filter) {
       return ad.offer.type === filter.value;
     },
     'housing-price': function (ad, filter) {
-      return ad.offer.price >= FilterParam.priceDict[filter.value].min
-        && ad.offer.price < FilterParam.priceDict[filter.value].max;
+      return priceToLimits[filter.value](ad);
     },
     'housing-rooms': function (ad, filter) {
       return ad.offer.rooms === +filter.value;
@@ -20,9 +33,7 @@
       return ad.offer.guests === +filter.value;
     },
     'housing-features': function (ad, filter) {
-      var checkboxElements = Array.prototype.slice.call(filter.querySelectorAll('input[type=checkbox]:checked'));
-
-      return checkboxElements.every(function (checkbox) {
+      return filterEvery.call(filter.querySelectorAll('input[type=checkbox]:checked'), function (checkbox) {
         return ad.offer.features.some(function (feature) {
           return feature === checkbox.value;
         });
@@ -31,26 +42,15 @@
   };
 
   var isCheckPass = function (ad) {
-    var filterElements = Array.prototype.slice.call(form.children);
-
-    return filterElements.every(function (filter) {
-      return filter.value === 'any'
-        ? true
-        : getStateFilter[filter.id](ad, filter);
+    return filterEvery.call(form.children, function (filter) {
+      return filter !== 'housing-features'
+        ? filter.value === 'any' || filterToRules[filter.id](ad, filter)
+        : filter.value === void 0 || filterToRules[filter.id](ad, filter);
     });
   };
 
-  var filterData = function (data) {
-    return data.filter(isCheckPass);
-  };
-
   var getFilteredAds = function (data) {
-    var filteredData = filterData(data);
-    if (filteredData.length > FilterParam.PIN_MAX) {
-      filteredData.length = FilterParam.PIN_MAX;
-    }
-
-    return filteredData;
+    return data.filter(isCheckPass);
   };
 
   window.export({
