@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var PIN_MAX = window.import('PIN_MAX').from('constants');
   var dom = window.import('*').from('util.dom');
   var map = window.import('removePins', 'renderPins').from('ui.map');
   var isElementShown = window.import('isElementShown').from('util.predicates');
@@ -10,7 +11,8 @@
   var debounce = window.import('debounce').from('util.debounce');
 
   var filterElement = document.querySelector('.map__filters-container');
-  var inputElements = filterElement.querySelectorAll('.map__filter, .map__checkbox');
+  var filterForm = filterElement.querySelector('.map__filters');
+  var inputElements = filterForm.querySelectorAll('.map__filter, .map__checkbox');
 
   var adsData = [];
 
@@ -23,14 +25,12 @@
 
   var loadHandler = function (data) {
     adsData = data;
-    map.renderPins(adsData);
 
+    map.renderPins(adsData.slice(0, PIN_MAX));
     inputElements.forEach(dom.unsetDisabled);
     dom.showElement(filterElement);
 
-    inputElements.forEach(function (element) {
-      element.addEventListener('change', debouncedFilterChangeHandler);
-    });
+    filterForm.addEventListener('change', debouncedFilterChangeHandler);
   };
 
   var errorHandler = function (errorMessage) {
@@ -46,17 +46,13 @@
     loadData(loadHandler, errorHandler);
   };
 
-  var removeListener = function (elementCheck, elements, evtHandler) {
-    return isElementShown(elementCheck) && elements.forEach(function (element) {
-      element.removeEventListener('change', evtHandler);
-    });
-  };
-
   var deactivate = function () {
     inputElements.forEach(dom.setDisabled);
     dom.hideElement(filterElement);
 
-    removeListener(filterElement, inputElements, debouncedFilterChangeHandler);
+    if (isElementShown(filterElement)) {
+      filterForm.removeEventListener('change', debouncedFilterChangeHandler);
+    }
   };
 
   window.export({

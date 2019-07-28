@@ -2,8 +2,8 @@
 
 (function () {
   var HousePrice = {
-    FIRST_LIMIT: 10000,
-    SECOND_LIMIT: 50000,
+    LOW: 10000,
+    HIGH: 50000,
   };
 
   var Request = {

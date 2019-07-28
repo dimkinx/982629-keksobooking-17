@@ -11,7 +11,7 @@
     return function () {
       var parameters = arguments;
 
-      if (timeoutId) {
+      if (timeoutId > 0) {
         clearTimeout(timeoutId);
       }
 

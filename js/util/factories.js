@@ -41,14 +41,11 @@
     };
   };
 
-  var makeFragmentRender = function (render, qty) {
+  var makeFragmentRender = function (render) {
     return function (dataList) {
       var fragment = document.createDocumentFragment();
-
       dataList.forEach(function (data, idx) {
-        if (idx < qty) {
-          fragment.appendChild(render(data, idx));
-        }
+        fragment.appendChild(render(data, idx));
       });
 
       return fragment;

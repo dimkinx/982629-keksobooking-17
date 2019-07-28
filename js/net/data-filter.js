@@ -1,21 +1,25 @@
 'use strict';
 
 (function () {
+  var PIN_MAX = window.import('PIN_MAX').from('constants');
   var HousePrice = window.import('HousePrice').from('types');
 
   var form = document.querySelector('.map__filters');
+  var featureFieldSet = form.querySelector('#housing-features');
+  var formElements = [];
+  var checkedInputs = [];
 
   var filterEvery = Array.prototype.every;
 
   var priceToLimits = {
     low: function (ad) {
-      return ad.offer.price < HousePrice.FIRST_LIMIT;
+      return ad.offer.price < HousePrice.LOW;
     },
     middle: function (ad) {
-      return ad.offer.price >= HousePrice.FIRST_LIMIT && ad.offer.price < HousePrice.SECOND_LIMIT;
+      return ad.offer.price >= HousePrice.LOW && ad.offer.price < HousePrice.HIGH;
     },
     high: function (ad) {
-      return ad.offer.price >= HousePrice.SECOND_LIMIT;
+      return ad.offer.price >= HousePrice.HIGH;
     },
   };
 
@@ -32,25 +36,28 @@
     'housing-guests': function (ad, filter) {
       return ad.offer.guests === +filter.value;
     },
-    'housing-features': function (ad, filter) {
-      return filterEvery.call(filter.querySelectorAll('input[type=checkbox]:checked'), function (checkbox) {
+    'housing-features': function (ad) {
+      return filterEvery.call(checkedInputs, function (checkbox) {
         return ad.offer.features.some(function (feature) {
           return feature === checkbox.value;
         });
       });
-    }
+    },
   };
 
   var isCheckPass = function (ad) {
-    return filterEvery.call(form.children, function (filter) {
-      return filter !== 'housing-features'
-        ? filter.value === 'any' || filterToRules[filter.id](ad, filter)
-        : filter.value === void 0 || filterToRules[filter.id](ad, filter);
+    return filterEvery.call(formElements, function (filter) {
+      return filter === featureFieldSet.id
+        ? filter.value === void 0 || filterToRules[filter.id](ad)
+        : filter.value === 'any' || filterToRules[filter.id](ad, filter);
     });
   };
 
   var getFilteredAds = function (data) {
-    return data.filter(isCheckPass);
+    formElements = form.children;
+    checkedInputs = featureFieldSet.querySelectorAll('input[type=checkbox]:checked');
+
+    return data.filter(isCheckPass).slice(0, PIN_MAX);
   };
 
   window.export({
