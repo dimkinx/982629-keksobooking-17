@@ -3,7 +3,8 @@
 (function () {
   var PIN_MAX = window.import('PIN_MAX').from('constants');
   var dom = window.import('*').from('util.dom');
-  var map = window.import('removePins', 'renderPins').from('ui.map');
+  var renderPins = window.import('renderPins').from('ui.pin');
+  var removePins = window.import('removePins').from('ui.pin');
   var isElementShown = window.import('isElementShown').from('util.predicates');
   var loadData = window.import('load').from('net.backend');
   var createErrorMessage = window.import('createErrorMessage').from('net.errorMessage');
@@ -17,8 +18,8 @@
   var adsData = [];
 
   var filterChangeHandler = function () {
-    map.removePins();
-    map.renderPins(getFilteredAds(adsData));
+    removePins();
+    renderPins(getFilteredAds(adsData));
   };
 
   var debouncedFilterChangeHandler = debounce(filterChangeHandler);
@@ -26,7 +27,7 @@
   var loadHandler = function (data) {
     adsData = data;
 
-    map.renderPins(adsData.slice(0, PIN_MAX));
+    renderPins(adsData.slice(0, PIN_MAX));
     inputElements.forEach(dom.unsetDisabled);
     dom.showElement(filterElement);
 

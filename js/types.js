@@ -56,6 +56,13 @@
     palace: 10000,
   };
 
+  var offerTypeToCyrillic = {
+    bungalo: 'Бунгало',
+    flat: 'Квартира',
+    house: 'Дом',
+    palace: 'Дворец',
+  };
+
   window.export({
     HousePrice: HousePrice,
     Request: Request,
@@ -64,5 +71,6 @@
     MapRect: MapRect,
     MainPinRect: MainPinRect,
     offerTypeToMinPrice: offerTypeToMinPrice,
+    offerTypeToCyrillic: offerTypeToCyrillic,
   }).to('types');
 })();

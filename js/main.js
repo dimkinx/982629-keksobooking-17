@@ -3,7 +3,7 @@
 (function () {
   var page = window.import('*').from('ui.page');
   var renderAddress = window.import('renderAddress').from('ui.ad');
-  var initMainPin = window.import('initMainPin').from('ui.pin');
+  var initMainPin = window.import('initMainPin').from('ui.mainPin');
 
   page.deactivate();
 

@@ -4,7 +4,7 @@
   var offerTypeToMinPrice = window.import('offerTypeToMinPrice').from('types');
   var MainPinSize = window.import('MainPinSize').from('types');
   var dom = window.import('unsetDisabled', 'setDisabled').from('util.dom');
-  var getMainPinPosition = window.import('getMainPinPosition').from('ui.pin');
+  var getMainPinPosition = window.import('getMainPinPosition').from('ui.mainPin');
 
   var form = document.querySelector('.ad-form');
   var fields = form.querySelectorAll('fieldset');
