@@ -4,15 +4,15 @@
   var offerTypeToMinPrice = window.import('offerTypeToMinPrice').from('types');
   var MainPinSize = window.import('MainPinSize').from('types');
   var dom = window.import('unsetDisabled', 'setDisabled').from('util.dom');
-  var getMainPinPosition = window.import('getMainPinPosition').from('ui.pin');
+  var getMainPinPosition = window.import('getMainPinPosition').from('ui.mainPin');
 
-  var form = document.querySelector('.ad-form');
-  var fields = form.querySelectorAll('fieldset');
-  var addressInput = form.querySelector('#address');
-  var typeSelect = form.querySelector('#type');
-  var priceInput = form.querySelector('#price');
-  var timeInSelect = form.querySelector('#timein');
-  var timeOutSelect = form.querySelector('#timeout');
+  var formElement = document.querySelector('.ad-form');
+  var fieldSets = formElement.querySelectorAll('fieldset');
+  var addressInput = formElement.querySelector('#address');
+  var typeSelect = formElement.querySelector('#type');
+  var priceInput = formElement.querySelector('#price');
+  var timeInSelect = formElement.querySelector('#timein');
+  var timeOutSelect = formElement.querySelector('#timeout');
 
   var priceInputChangeHandler = function (evt) {
     var minPrice = offerTypeToMinPrice[evt.target.value];
@@ -33,15 +33,15 @@
   };
 
   var activate = function () {
-    form.classList.remove('ad-form--disabled');
-    fields.forEach(dom.unsetDisabled);
+    formElement.classList.remove('ad-form--disabled');
+    fieldSets.forEach(dom.unsetDisabled);
 
     renderAddress(getMainPinPosition(MainPinSize.HEIGHT));
   };
 
   var deactivate = function () {
-    form.classList.add('ad-form--disabled');
-    fields.forEach(dom.setDisabled);
+    formElement.classList.add('ad-form--disabled');
+    fieldSets.forEach(dom.setDisabled);
 
     renderAddress(getMainPinPosition(MainPinSize.RADIUS));
   };

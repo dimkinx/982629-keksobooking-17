@@ -3,10 +3,10 @@
 (function () {
   var PIN_MAX = window.import('PIN_MAX').from('constants');
   var HousePrice = window.import('HousePrice').from('types');
+  var filterFormElement = window.import('filterFormElement').from('util.domRef');
 
-  var form = document.querySelector('.map__filters');
-  var featureFieldSet = form.querySelector('#housing-features');
-  var formElements = [];
+  var featureFieldSet = filterFormElement.querySelector('#housing-features');
+  var formChildrenElements = [];
   var checkedInputs = [];
 
   var filterEvery = Array.prototype.every;
@@ -46,7 +46,7 @@
   };
 
   var isCheckPass = function (ad) {
-    return filterEvery.call(formElements, function (filter) {
+    return filterEvery.call(formChildrenElements, function (filter) {
       return filter === featureFieldSet.id
         ? filter.value === void 0 || filterToRules[filter.id](ad)
         : filter.value === 'any' || filterToRules[filter.id](ad, filter);
@@ -54,7 +54,7 @@
   };
 
   var getFilteredAds = function (data) {
-    formElements = form.children;
+    formChildrenElements = filterFormElement.children;
     checkedInputs = featureFieldSet.querySelectorAll('input[type=checkbox]:checked');
 
     return data.filter(isCheckPass).slice(0, PIN_MAX);

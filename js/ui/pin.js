@@ -1,51 +1,40 @@
 'use strict';
 
 (function () {
-  var MainPinSize = window.import('MainPinSize').from('types');
-  var MainPinRect = window.import('MainPinRect').from('types');
-  var factories = window.import('makeDragStart', 'makeDragOnce').from('util.factories');
+  var PinSize = window.import('PinSize').from('types');
+  var makeFragmentRender = window.import('makeFragmentRender').from('util.factories');
+  var mapElement = window.import('mapElement').from('util.domRef');
 
-  var mapElement = document.querySelector('.map');
-  var mainPinButton = mapElement.querySelector('.map__pin--main');
+  var pinsElement = mapElement.querySelector('.map__pins');
+  var pinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
 
-  var getMainPinPosition = function (height) {
-    return {
-      x: mainPinButton.offsetLeft + MainPinSize.RADIUS,
-      y: mainPinButton.offsetTop + height,
-    };
+  var createPin = function (ad) {
+    var pin = pinTemplateElement.cloneNode(true);
+    var image = pin.querySelector('img');
+
+    pin.style.left = (ad.location.x - PinSize.RADIUS) + 'px';
+    pin.style.top = (ad.location.y - PinSize.HEIGHT) + 'px';
+    image.src = ad.author.avatar;
+    image.alt = ad.offer.title;
+
+    return pin;
   };
 
-  var renderMainPin = function (x, y) {
-    mainPinButton.style.left = x + 'px';
-    mainPinButton.style.top = y + 'px';
+  var getPinFragment = makeFragmentRender(createPin);
+
+  var renderPins = function (ads) {
+    pinsElement.appendChild(getPinFragment(ads));
   };
 
-  var mainPinStartHandler = function () {
-    return {
-      x: mainPinButton.offsetLeft,
-      y: mainPinButton.offsetTop,
-    };
+  var removePins = function () {
+    pinsElement
+      .querySelectorAll('button.map__pin:not(.map__pin--main)')
+      .forEach(function (element) {
+        element.remove();
+      });
   };
-
-  var initMainPin = function (changeHandler, moveHandler) {
-    var mainPinDragHandler = function (x, y) {
-      x = Math.min(Math.max(x, MainPinRect.LEFT), MainPinRect.RIGHT);
-      y = Math.min(Math.max(y, MainPinRect.TOP), MainPinRect.BOTTOM);
-
-      renderMainPin(x, y);
-
-      moveHandler(getMainPinPosition(MainPinSize.HEIGHT));
-    };
-
-    var mainPinDragOnceHandler = factories.makeDragOnce(changeHandler);
-    var mainPinDragStartHandler = factories.makeDragStart(mainPinStartHandler, mainPinDragHandler);
-
-    mainPinButton.addEventListener('mousedown', mainPinDragOnceHandler, {once: true});
-    mainPinButton.addEventListener('mousedown', mainPinDragStartHandler);
-  };
-
   window.export({
-    getMainPinPosition: getMainPinPosition,
-    initMainPin: initMainPin,
+    renderPins: renderPins,
+    removePins: removePins,
   }).to('ui.pin');
 })();

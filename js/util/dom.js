@@ -21,16 +21,11 @@
     input.value = '';
   };
 
-  var removeElement = function (element) {
-    element.remove();
-  };
-
   window.export({
     setDisabled: setDisabled,
     unsetDisabled: unsetDisabled,
     showElement: showElement,
     hideElement: hideElement,
     clearInput: clearInput,
-    removeElement: removeElement,
   }).to('util.dom');
 })();
