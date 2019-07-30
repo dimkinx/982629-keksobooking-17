@@ -3,6 +3,8 @@
 (function () {
   var PIN_MAX = window.import('PIN_MAX').from('constants');
   var dom = window.import('*').from('util.dom');
+  var domRef = window.import('*').from('util.domRef');
+
   var renderPins = window.import('renderPins').from('ui.pin');
   var removePins = window.import('removePins').from('ui.pin');
   var isElementShown = window.import('isElementShown').from('util.predicates');
@@ -11,9 +13,7 @@
   var getFilteredAds = window.import('getFilteredAds').from('net.dataFilter');
   var debounce = window.import('debounce').from('util.debounce');
 
-  var filterElement = document.querySelector('.map__filters-container');
-  var filterForm = filterElement.querySelector('.map__filters');
-  var inputElements = filterForm.querySelectorAll('.map__filter, .map__checkbox');
+  var inputElements = domRef.filterFormElement.querySelectorAll('.map__filter, .map__checkbox');
 
   var adsData = [];
 
@@ -29,9 +29,9 @@
 
     renderPins(adsData.slice(0, PIN_MAX));
     inputElements.forEach(dom.unsetDisabled);
-    dom.showElement(filterElement);
+    dom.showElement(domRef.filterContainerElement);
 
-    filterForm.addEventListener('change', debouncedFilterChangeHandler);
+    domRef.filterFormElement.addEventListener('change', debouncedFilterChangeHandler);
   };
 
   var errorHandler = function (errorMessage) {
@@ -49,10 +49,10 @@
 
   var deactivate = function () {
     inputElements.forEach(dom.setDisabled);
-    dom.hideElement(filterElement);
+    dom.hideElement(domRef.filterContainerElement);
 
-    if (isElementShown(filterElement)) {
-      filterForm.removeEventListener('change', debouncedFilterChangeHandler);
+    if (isElementShown(domRef.filterContainerElement)) {
+      domRef.filterFormElement.removeEventListener('change', debouncedFilterChangeHandler);
     }
   };
 

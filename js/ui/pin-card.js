@@ -1,12 +1,11 @@
 'use strict';
 
 (function () {
-  var offerTypeToCyrillic = window.import('offerTypeToCyrillic').from('types');
+  var offerTypeToCyrillic = window.import('offerTypeEnToRu').from('types');
   var makeFragmentRender = window.import('makeFragmentRender').from('util.factories');
+  var domRef = window.import('*').from('util.domRef');
 
-  var map = document.querySelector('.map');
-  var filterContainer = map.querySelector('.map__filters-container');
-  var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+  var cardTemplateElement = document.querySelector('#card').content.querySelector('.map__card');
 
   var getRemainderOfNum = function (num) {
     if (num % 100 > 19) {
@@ -36,26 +35,26 @@
       + getEndingWords(guests, 'гостя', 'гостей', 'гостей');
   };
 
-  var createFeature = function (data) {
+  var createFeature = function (name) {
     var feature = document.createElement('li');
-    feature.classList = 'popup__feature popup__feature--' + data;
+    feature.classList = 'popup__feature popup__feature--' + name;
 
     return feature;
   };
 
-  var makeFeatureFragment = makeFragmentRender(createFeature);
+  var getFeatureFragment = makeFragmentRender(createFeature);
 
-  var renderFeatures = function (data, element) {
+  var renderFeatures = function (element, ad) {
     element.innerHTML = '';
 
-    return data.length > 0
-      ? element.appendChild(makeFeatureFragment(data))
+    return ad.length > 0
+      ? element.appendChild(getFeatureFragment(ad))
       : element.remove();
   };
 
-  var createPhoto = function (data) {
+  var createPhoto = function (url) {
     var cardPhoto = document.createElement('img');
-    cardPhoto.src = data;
+    cardPhoto.src = url;
     cardPhoto.classList.add('popup__photo');
     cardPhoto.width = 45;
     cardPhoto.height = 40;
@@ -64,20 +63,20 @@
     return cardPhoto;
   };
 
-  var makePhotoFragment = makeFragmentRender(createPhoto);
+  var getPhotoFragment = makeFragmentRender(createPhoto);
 
-  var renderPhotos = function (data, element) {
+  var renderPhotos = function (element, ad) {
     element.innerHTML = '';
 
-    return data.length > 0
-      ? element.appendChild(makePhotoFragment(data))
+    return ad.length > 0
+      ? element.appendChild(getPhotoFragment(ad))
       : element.remove();
   };
 
   var createCard = function (ad) {
-    var card = cardTemplate.cloneNode(true);
-    var features = card.querySelector('.popup__features');
-    var photos = card.querySelector('.popup__photos');
+    var card = cardTemplateElement.cloneNode(true);
+    var featuresElement = card.querySelector('.popup__features');
+    var photosElement = card.querySelector('.popup__photos');
 
     card.querySelector('.popup__avatar').src = ad.author.avatar;
     card.querySelector('.popup__title').textContent = ad.offer.title;
@@ -88,15 +87,15 @@
     card.querySelector('.popup__text--time').textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до: ' + ad.offer.checkout;
     card.querySelector('.popup__description').textContent = ad.offer.description;
 
-    renderFeatures(ad.offer.features, features);
-    renderPhotos(ad.offer.photos, photos);
+    renderFeatures(featuresElement, ad.offer.features);
+    renderPhotos(photosElement, ad.offer.photos);
 
     return card;
   };
 
-  var renderCard = function (data) {
-    var card = createCard(data);
-    map.insertBefore(card, filterContainer);
+  var renderCard = function (ad) {
+    var card = createCard(ad);
+    domRef.mapElement.insertBefore(card, domRef.filterContainerElement);
   };
 
   window.export({

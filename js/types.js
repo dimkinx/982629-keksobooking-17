@@ -56,7 +56,7 @@
     palace: 10000,
   };
 
-  var offerTypeToCyrillic = {
+  var offerTypeEnToRu = {
     bungalo: 'Бунгало',
     flat: 'Квартира',
     house: 'Дом',
@@ -71,6 +71,6 @@
     MapRect: MapRect,
     MainPinRect: MainPinRect,
     offerTypeToMinPrice: offerTypeToMinPrice,
-    offerTypeToCyrillic: offerTypeToCyrillic,
+    offerTypeEnToRu: offerTypeEnToRu,
   }).to('types');
 })();

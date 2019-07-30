@@ -3,9 +3,9 @@
 (function () {
   var MainPinSize = window.import('MainPinSize').from('types');
   var MainPinRect = window.import('MainPinRect').from('types');
+  var mapElement = window.import('mapElement').from('util.domRef');
   var factories = window.import('makeDragStart', 'makeDragOnce').from('util.factories');
 
-  var mapElement = document.querySelector('.map');
   var mainPinButton = mapElement.querySelector('.map__pin--main');
 
   var getMainPinPosition = function (height) {

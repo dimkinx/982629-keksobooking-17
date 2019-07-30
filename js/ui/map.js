@@ -1,14 +1,14 @@
 'use strict';
 
 (function () {
-  var mapSection = document.querySelector('.map');
+  var mapElement = window.import('mapElement').from('util.domRef');
 
   var activate = function () {
-    mapSection.classList.remove('map--faded');
+    mapElement.classList.remove('map--faded');
   };
 
   var deactivate = function () {
-    mapSection.classList.add('map--faded');
+    mapElement.classList.add('map--faded');
   };
 
   window.export({

@@ -2,16 +2,14 @@
 
 (function () {
   var PinSize = window.import('PinSize').from('types');
-  var dom = window.import('*').from('util.dom');
   var makeFragmentRender = window.import('makeFragmentRender').from('util.factories');
-  var renderCard = window.import('renderCard').from('ui.card');
+  var mapElement = window.import('mapElement').from('util.domRef');
 
-  var mapSection = document.querySelector('.map');
-  var pinsContainer = mapSection.querySelector('.map__pins');
-  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+  var pinsElement = mapElement.querySelector('.map__pins');
+  var pinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
 
   var createPin = function (ad) {
-    var pin = pinTemplate.cloneNode(true);
+    var pin = pinTemplateElement.cloneNode(true);
     var image = pin.querySelector('img');
 
     pin.style.left = (ad.location.x - PinSize.RADIUS) + 'px';
@@ -19,22 +17,20 @@
     image.src = ad.author.avatar;
     image.alt = ad.offer.title;
 
-    renderCard(ad);
-
     return pin;
   };
 
   var getPinFragment = makeFragmentRender(createPin);
 
-  var renderPins = function (data) {
-    pinsContainer.appendChild(getPinFragment(data));
+  var renderPins = function (ads) {
+    pinsElement.appendChild(getPinFragment(ads));
   };
 
   var removePins = function () {
-    pinsContainer
+    pinsElement
       .querySelectorAll('button.map__pin:not(.map__pin--main)')
       .forEach(function (element) {
-        dom.removeElement(element);
+        element.remove();
       });
   };
   window.export({
