@@ -44,11 +44,11 @@
 
   var getFeatureFragment = makeFragmentRender(createFeature);
 
-  var renderFeatures = function (element, ad) {
+  var renderFeatures = function (element, features) {
     element.innerHTML = '';
 
-    return ad.length > 0
-      ? element.appendChild(getFeatureFragment(ad))
+    return features.length > 0
+      ? element.appendChild(getFeatureFragment(features))
       : element.remove();
   };
 
@@ -65,11 +65,11 @@
 
   var getPhotoFragment = makeFragmentRender(createPhoto);
 
-  var renderPhotos = function (element, ad) {
+  var renderPhotos = function (element, photos) {
     element.innerHTML = '';
 
-    return ad.length > 0
-      ? element.appendChild(getPhotoFragment(ad))
+    return photos.length > 0
+      ? element.appendChild(getPhotoFragment(photos))
       : element.remove();
   };
 
