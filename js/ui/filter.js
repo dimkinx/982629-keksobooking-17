@@ -15,12 +15,15 @@
   var getFilteredAds = window.import('getFilteredAds').from('net.dataFilter');
   var debounce = window.import('debounce').from('util.debounce');
 
+  var cardElement = domRef.mapElement.querySelector('.map__card');
   var inputElements = domRef.filterFormElement.querySelectorAll('.map__filter, .map__checkbox');
 
   var ads = [];
 
   var filterChangeHandler = function () {
-    closeCard();
+    if (isElementShown(cardElement)) {
+      closeCard();
+    }
     removePins();
     renderPins(getFilteredAds(ads));
   };
