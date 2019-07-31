@@ -7,8 +7,7 @@
 
   var renderPins = window.import('renderPins').from('ui.pin');
   var removePins = window.import('removePins').from('ui.pin');
-  var initCardAds = window.import('initCardAds').from('ui.pinCard');
-  var closeCard = window.import('closeCard').from('ui.pinCard');
+  var pinCard = window.import('*').from('ui.pinCard');
   var isElementShown = window.import('isElementShown').from('util.predicates');
   var loadData = window.import('load').from('net.backend');
   var createErrorMessage = window.import('createErrorMessage').from('net.errorMessage');
@@ -22,7 +21,7 @@
 
   var filterChangeHandler = function () {
     if (isElementShown(cardElement)) {
-      closeCard();
+      pinCard.closeCard();
     }
     removePins();
     renderPins(getFilteredAds(ads));
@@ -37,7 +36,7 @@
     });
 
     renderPins(ads.slice(0, PIN_MAX));
-    initCardAds(ads);
+    pinCard.initCardAds(ads);
     inputElements.forEach(dom.unsetDisabled);
     dom.showElement(domRef.filterContainerElement);
 

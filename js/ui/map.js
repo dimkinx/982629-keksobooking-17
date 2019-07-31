@@ -2,7 +2,7 @@
 
 (function () {
   var mapElement = window.import('mapElement').from('util.domRef');
-  var initCard = window.import('initCard').from('ui.pinCard');
+  var pinClickHandler = window.import('pinClickHandler').from('ui.pinCard');
   var activatePin = window.import('activatePin').from('ui.pin');
 
   var pinsContainerElement = mapElement.querySelector('.map__pins');
@@ -29,7 +29,7 @@
     }
 
     activatePin(pin);
-    initCard(pin.dataset.index);
+    pinClickHandler(pin.dataset.index);
   };
 
   var activate = function () {
