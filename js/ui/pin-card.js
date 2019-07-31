@@ -1,11 +1,40 @@
 'use strict';
 
 (function () {
-  var offerTypeToCyrillic = window.import('offerTypeEnToRu').from('types');
+  var offerTypeEnToRu = window.import('offerTypeEnToRu').from('types');
   var makeFragmentRender = window.import('makeFragmentRender').from('util.factories');
-  var domRef = window.import('*').from('util.domRef');
 
-  var cardTemplateElement = document.querySelector('#card').content.querySelector('.map__card');
+  var domRef = window.import('*').from('util.domRef');
+  var dom = window.import('*').from('util.dom');
+  var isEscapeKey = window.import('isEscapeKey').from('util.predicates');
+
+  (function () {
+    var cardTemplateElement = document.querySelector('#card').content.querySelector('.map__card');
+    var card = cardTemplateElement.cloneNode(true);
+    domRef.mapElement.insertBefore(card, domRef.filterContainerElement);
+    dom.hideElement(card);
+  })();
+
+  var mapElement = window.import('mapElement').from('util.domRef');
+  var pinsContainerElement = mapElement.querySelector('.map__pins');
+  var cardElement = domRef.mapElement.querySelector('.map__card');
+  var avatarElement = cardElement.querySelector('.popup__avatar');
+  var titleElement = cardElement.querySelector('.popup__title');
+  var addressElement = cardElement.querySelector('.popup__text--address');
+  var priceElement = cardElement.querySelector('.popup__text--price');
+  var typeElement = cardElement.querySelector('.popup__type');
+  var capacityElement = cardElement.querySelector('.popup__text--capacity');
+  var timeElement = cardElement.querySelector('.popup__text--time');
+  var descriptionElement = cardElement.querySelector('.popup__description');
+  var featuresElement = cardElement.querySelector('.popup__features');
+  var photosElement = cardElement.querySelector('.popup__photos');
+  var closeElement = cardElement.querySelector('.popup__close');
+
+  var ads = [];
+
+  var initCardAds = function (data) {
+    ads = data;
+  };
 
   var getRemainderOfNum = function (num) {
     if (num % 100 > 19) {
@@ -47,9 +76,9 @@
   var renderFeatures = function (element, features) {
     element.innerHTML = '';
 
-    return features.length > 0
-      ? element.appendChild(getFeatureFragment(features))
-      : element.remove();
+    if (features.length > 0) {
+      element.appendChild(getFeatureFragment(features));
+    }
   };
 
   var createPhoto = function (url) {
@@ -68,37 +97,63 @@
   var renderPhotos = function (element, photos) {
     element.innerHTML = '';
 
-    return photos.length > 0
-      ? element.appendChild(getPhotoFragment(photos))
-      : element.remove();
+    if (photos.length > 0) {
+      element.appendChild(getPhotoFragment(photos));
+    }
   };
 
-  var createCard = function (ad) {
-    var card = cardTemplateElement.cloneNode(true);
-    var featuresElement = card.querySelector('.popup__features');
-    var photosElement = card.querySelector('.popup__photos');
-
-    card.querySelector('.popup__avatar').src = ad.author.avatar;
-    card.querySelector('.popup__title').textContent = ad.offer.title;
-    card.querySelector('.popup__text--address').textContent = ad.offer.address;
-    card.querySelector('.popup__text--price').textContent = ad.offer.price + ' \u20bd/ночь';
-    card.querySelector('.popup__type').textContent = offerTypeToCyrillic[ad.offer.type];
-    card.querySelector('.popup__text--capacity').textContent = makeRoomsAndGuests(ad.offer.rooms, ad.offer.guests);
-    card.querySelector('.popup__text--time').textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до: ' + ad.offer.checkout;
-    card.querySelector('.popup__description').textContent = ad.offer.description;
+  var updateCard = function (ad) {
+    avatarElement.src = ad.author.avatar;
+    titleElement.textContent = ad.offer.title;
+    addressElement.textContent = ad.offer.address;
+    priceElement.textContent = ad.offer.price + ' \u20bd/ночь';
+    typeElement.textContent = offerTypeEnToRu[ad.offer.type];
+    capacityElement.textContent = makeRoomsAndGuests(ad.offer.rooms, ad.offer.guests);
+    timeElement.textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до: ' + ad.offer.checkout;
+    descriptionElement.textContent = ad.offer.description;
 
     renderFeatures(featuresElement, ad.offer.features);
     renderPhotos(photosElement, ad.offer.photos);
-
-    return card;
   };
 
-  var renderCard = function (ad) {
-    var card = createCard(ad);
-    domRef.mapElement.insertBefore(card, domRef.filterContainerElement);
+  var closeCard = function () {
+    var activePin = pinsContainerElement.querySelector('.map__pin--active');
+    activePin.classList.remove('map__pin--active');
+
+    dom.hideElement(cardElement);
+    closeElement.removeEventListener('click', closeElementClickHandler);
+    document.removeEventListener('keydown', escPressHandler);
+  };
+
+  var closeElementClickHandler = function () {
+    closeCard();
+  };
+
+  var escPressHandler = function (evt) {
+    return isEscapeKey(evt) && closeCard();
+  };
+
+  var showCard = function (ad) {
+    dom.showElement(cardElement);
+    updateCard(ad);
+
+    document.addEventListener('keydown', escPressHandler);
+    closeElement.addEventListener('click', closeElementClickHandler);
+  };
+
+  var initCard = function (id) {
+    var ad = ads[id];
+
+    if (cardElement.classList.contains('hidden')) {
+      showCard(ad);
+    }
+
+    updateCard(ad);
   };
 
   window.export({
-    renderCard: renderCard,
-  }).to('ui.card');
+    initCardAds: initCardAds,
+    initCard: initCard,
+    closeCard: closeCard,
+  }).to('ui.pinCard');
 })();

@@ -7,6 +7,7 @@
 
   var renderPins = window.import('renderPins').from('ui.pin');
   var removePins = window.import('removePins').from('ui.pin');
+  var initCardAds = window.import('initCardAds').from('ui.pinCard');
   var isElementShown = window.import('isElementShown').from('util.predicates');
   var loadData = window.import('load').from('net.backend');
   var createErrorMessage = window.import('createErrorMessage').from('net.errorMessage');
@@ -15,19 +16,23 @@
 
   var inputElements = domRef.filterFormElement.querySelectorAll('.map__filter, .map__checkbox');
 
-  var adsData = [];
+  var ads = [];
 
   var filterChangeHandler = function () {
     removePins();
-    renderPins(getFilteredAds(adsData));
+    renderPins(getFilteredAds(ads));
   };
 
   var debouncedFilterChangeHandler = debounce(filterChangeHandler);
 
   var loadHandler = function (data) {
-    adsData = data;
+    ads = data.map(function (ad, idx) {
+      ad.id = idx;
+      return ad;
+    });
 
-    renderPins(adsData.slice(0, PIN_MAX));
+    renderPins(ads.slice(0, PIN_MAX));
+    initCardAds(ads);
     inputElements.forEach(dom.unsetDisabled);
     dom.showElement(domRef.filterContainerElement);
 
