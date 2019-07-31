@@ -118,7 +118,10 @@
 
   var closeCard = function () {
     var activePin = pinsContainerElement.querySelector('.map__pin--active');
-    activePin.classList.remove('map__pin--active');
+
+    if (activePin !== null) {
+      activePin.classList.remove('map__pin--active');
+    }
 
     dom.hideElement(cardElement);
     closeElement.removeEventListener('click', closeElementClickHandler);

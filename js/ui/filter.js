@@ -8,6 +8,7 @@
   var renderPins = window.import('renderPins').from('ui.pin');
   var removePins = window.import('removePins').from('ui.pin');
   var initCardAds = window.import('initCardAds').from('ui.pinCard');
+  var closeCard = window.import('closeCard').from('ui.pinCard');
   var isElementShown = window.import('isElementShown').from('util.predicates');
   var loadData = window.import('load').from('net.backend');
   var createErrorMessage = window.import('createErrorMessage').from('net.errorMessage');
@@ -19,6 +20,7 @@
   var ads = [];
 
   var filterChangeHandler = function () {
+    closeCard();
     removePins();
     renderPins(getFilteredAds(ads));
   };
