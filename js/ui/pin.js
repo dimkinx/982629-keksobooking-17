@@ -5,7 +5,7 @@
   var makeFragmentRender = window.import('makeFragmentRender').from('util.factories');
   var mapElement = window.import('mapElement').from('util.domRef');
 
-  var pinsContainerElement = mapElement.querySelector('.map__pins');
+  var pinsDivElement = mapElement.querySelector('.map__pins');
   var pinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
 
   var createPin = function (ad) {
@@ -24,11 +24,11 @@
   var getPinFragment = makeFragmentRender(createPin);
 
   var renderPins = function (ads) {
-    pinsContainerElement.appendChild(getPinFragment(ads));
+    pinsDivElement.appendChild(getPinFragment(ads));
   };
 
   var removePins = function () {
-    pinsContainerElement
+    pinsDivElement
       .querySelectorAll('button.map__pin:not(.map__pin--main)')
       .forEach(function (element) {
         element.remove();
@@ -40,7 +40,7 @@
   };
 
   var activatePin = function (pin) {
-    var activePin = pinsContainerElement.querySelector('.map__pin--active');
+    var activePin = pinsDivElement.querySelector('.map__pin--active');
     if (activePin !== null) {
       setPinState(activePin, false);
     }

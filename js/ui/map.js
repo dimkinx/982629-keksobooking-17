@@ -29,7 +29,7 @@
     }
 
     activatePin(pin);
-    pinClickHandler(pin.dataset.index);
+    pinClickHandler(+pin.dataset.index);
   };
 
   var activate = function () {

@@ -16,19 +16,19 @@
 
   createCard();
 
-  var pinsContainerElement = domRef.mapElement.querySelector('.map__pins');
-  var cardArticleElement = domRef.mapElement.querySelector('.map__card');
-  var avatarImgElement = cardArticleElement.querySelector('.popup__avatar');
-  var titleTitleElement = cardArticleElement.querySelector('.popup__title');
-  var addressTextElement = cardArticleElement.querySelector('.popup__text--address');
-  var priceTextElement = cardArticleElement.querySelector('.popup__text--price');
-  var typeTitleElement = cardArticleElement.querySelector('.popup__type');
-  var capacityTextElement = cardArticleElement.querySelector('.popup__text--capacity');
-  var timeTextElement = cardArticleElement.querySelector('.popup__text--time');
-  var descriptionTextElement = cardArticleElement.querySelector('.popup__description');
-  var featuresListElement = cardArticleElement.querySelector('.popup__features');
-  var photosContainerElement = cardArticleElement.querySelector('.popup__photos');
-  var closeButtonElement = cardArticleElement.querySelector('.popup__close');
+  var pinsDivElement = domRef.mapElement.querySelector('.map__pins');
+  var cardElement = domRef.mapElement.querySelector('.map__card');
+  var avatarImageElement = cardElement.querySelector('.popup__avatar');
+  var titleHeadingElement = cardElement.querySelector('.popup__title');
+  var addressParagraphElement = cardElement.querySelector('.popup__text--address');
+  var priceParagraphElement = cardElement.querySelector('.popup__text--price');
+  var typeHeadingElement = cardElement.querySelector('.popup__type');
+  var capacityParagraphElement = cardElement.querySelector('.popup__text--capacity');
+  var timeParagraphElement = cardElement.querySelector('.popup__text--time');
+  var descriptionParagraphElement = cardElement.querySelector('.popup__description');
+  var featuresUListElement = cardElement.querySelector('.popup__features');
+  var photosDivElement = cardElement.querySelector('.popup__photos');
+  var closeButtonElement = cardElement.querySelector('.popup__close');
 
   var ads = [];
 
@@ -49,7 +49,7 @@
       return genitivePlural;
     }
 
-    return (getRemainderOfNum(num) === 1)
+    return getRemainderOfNum(num) === 1
       ? nominative
       : genitiveSingular;
   };
@@ -65,10 +65,10 @@
   };
 
   var createFeature = function (name) {
-    var feature = document.createElement('li');
-    feature.classList = 'popup__feature popup__feature--' + name;
+    var featureLIElement = document.createElement('li');
+    featureLIElement.classList = 'popup__feature popup__feature--' + name;
 
-    return feature;
+    return featureLIElement;
   };
 
   var getFeatureFragment = makeFragmentRender(createFeature);
@@ -82,14 +82,14 @@
   };
 
   var createPhoto = function (url) {
-    var cardImgPhoto = document.createElement('img');
-    cardImgPhoto.src = url;
-    cardImgPhoto.classList.add('popup__photo');
-    cardImgPhoto.width = 45;
-    cardImgPhoto.height = 40;
-    cardImgPhoto.alt = 'Фотография жилья';
+    var photoImageElement = document.createElement('img');
+    photoImageElement.src = url;
+    photoImageElement.classList.add('popup__photo');
+    photoImageElement.width = 45;
+    photoImageElement.height = 40;
+    photoImageElement.alt = 'Фотография жилья';
 
-    return cardImgPhoto;
+    return photoImageElement;
   };
 
   var getPhotoFragment = makeFragmentRender(createPhoto);
@@ -103,27 +103,27 @@
   };
 
   var updateCard = function (ad) {
-    avatarImgElement.src = ad.author.avatar;
-    titleTitleElement.textContent = ad.offer.title;
-    addressTextElement.textContent = ad.offer.address;
-    priceTextElement.textContent = ad.offer.price + ' \u20bd/ночь';
-    typeTitleElement.textContent = offerTypeEnToRu[ad.offer.type];
-    capacityTextElement.textContent = getCapacityContent(ad);
-    timeTextElement.textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до: ' + ad.offer.checkout;
-    descriptionTextElement.textContent = ad.offer.description;
+    avatarImageElement.src = ad.author.avatar;
+    titleHeadingElement.textContent = ad.offer.title;
+    addressParagraphElement.textContent = ad.offer.address;
+    priceParagraphElement.textContent = ad.offer.price + ' \u20bd/ночь';
+    typeHeadingElement.textContent = offerTypeEnToRu[ad.offer.type];
+    capacityParagraphElement.textContent = getCapacityContent(ad);
+    timeParagraphElement.textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до: ' + ad.offer.checkout;
+    descriptionParagraphElement.textContent = ad.offer.description;
 
-    renderFeatures(featuresListElement, ad.offer.features);
-    renderPhotos(photosContainerElement, ad.offer.photos);
+    renderFeatures(featuresUListElement, ad.offer.features);
+    renderPhotos(photosDivElement, ad.offer.photos);
   };
 
   var closeCard = function () {
-    var activePinElement = pinsContainerElement.querySelector('.map__pin--active');
+    var activePinButtonElement = pinsDivElement.querySelector('.map__pin--active');
 
-    if (activePinElement !== null) {
-      activePinElement.classList.remove('map__pin--active');
+    if (activePinButtonElement !== null) {
+      activePinButtonElement.classList.remove('map__pin--active');
     }
 
-    dom.hideElement(cardArticleElement);
+    dom.hideElement(cardElement);
     closeButtonElement.removeEventListener('click', closeElementClickHandler);
     document.removeEventListener('keydown', escPressHandler);
   };
@@ -137,17 +137,17 @@
   };
 
   var showCard = function (ad) {
-    dom.showElement(cardArticleElement);
     updateCard(ad);
+    dom.showElement(cardElement);
 
     document.addEventListener('keydown', escPressHandler);
     closeButtonElement.addEventListener('click', closeElementClickHandler);
   };
 
   var pinClickHandler = function (id) {
-    var ad = ads[+id];
+    var ad = ads[id];
 
-    if (!cardArticleElement.classList.contains('hidden')) {
+    if (!cardElement.classList.contains('hidden')) {
       updateCard(ad);
     }
 
