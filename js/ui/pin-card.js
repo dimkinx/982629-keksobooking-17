@@ -30,12 +30,6 @@
   var photosDivElement = cardElement.querySelector('.popup__photos');
   var closeButtonElement = cardElement.querySelector('.popup__close');
 
-  var ads = [];
-
-  var initCardAds = function (data) {
-    ads = data;
-  };
-
   var getRemainderOfNum = function (num) {
     if (num % 100 > 19) {
       return num % 10;
@@ -144,19 +138,9 @@
     closeButtonElement.addEventListener('click', closeElementClickHandler);
   };
 
-  var pinClickHandler = function (id) {
-    var ad = ads[id];
-
-    if (!cardElement.classList.contains('hidden')) {
-      updateCard(ad);
-    }
-
-    showCard(ad);
-  };
-
   window.export({
-    initCardAds: initCardAds,
-    pinClickHandler: pinClickHandler,
+    updateCard: updateCard,
+    showCard: showCard,
     closeCard: closeCard,
   }).to('ui.pinCard');
 })();
