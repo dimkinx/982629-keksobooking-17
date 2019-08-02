@@ -19,6 +19,16 @@
 
   var ads = [];
 
+  var pinClickHandler = function (id) {
+    var ad = ads[id];
+
+    if (!cardElement.classList.contains('hidden')) {
+      pinCard.updateCard(ad);
+    }
+
+    pinCard.showCard(ad);
+  };
+
   var filterChangeHandler = function () {
     if (isElementShown(cardElement)) {
       pinCard.closeCard();
@@ -36,7 +46,7 @@
     });
 
     renderPins(ads.slice(0, PIN_MAX));
-    pinCard.initCardAds(ads);
+
     inputElements.forEach(dom.unsetDisabled);
     dom.showElement(domRef.filterContainerElement);
 
@@ -66,6 +76,7 @@
   };
 
   window.export({
+    pinClickHandler: pinClickHandler,
     activate: activate,
     deactivate: deactivate,
   }).to('ui.filter');

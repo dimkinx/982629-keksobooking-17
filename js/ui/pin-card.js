@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var offerTypeEnToRu = window.import('offerTypeEnToRu').from('types');
+  var types = window.import('*').from('types');
   var makeFragmentRender = window.import('makeFragmentRender').from('util.factories');
   var isEscapeKey = window.import('isEscapeKey').from('util.predicates');
   var domRef = window.import('*').from('util.domRef');
@@ -29,12 +29,6 @@
   var featuresUListElement = cardElement.querySelector('.popup__features');
   var photosDivElement = cardElement.querySelector('.popup__photos');
   var closeButtonElement = cardElement.querySelector('.popup__close');
-
-  var ads = [];
-
-  var initCardAds = function (data) {
-    ads = data;
-  };
 
   var getRemainderOfNum = function (num) {
     if (num % 100 > 19) {
@@ -85,8 +79,8 @@
     var photoImageElement = document.createElement('img');
     photoImageElement.src = url;
     photoImageElement.classList.add('popup__photo');
-    photoImageElement.width = 45;
-    photoImageElement.height = 40;
+    photoImageElement.width = types.PhotoSize.WIDTH;
+    photoImageElement.height = types.PhotoSize.HEIGHT;
     photoImageElement.alt = 'Фотография жилья';
 
     return photoImageElement;
@@ -107,7 +101,7 @@
     titleHeadingElement.textContent = ad.offer.title;
     addressParagraphElement.textContent = ad.offer.address;
     priceParagraphElement.textContent = ad.offer.price + ' \u20bd/ночь';
-    typeHeadingElement.textContent = offerTypeEnToRu[ad.offer.type];
+    typeHeadingElement.textContent = types.offerTypeEnToRu[ad.offer.type];
     capacityParagraphElement.textContent = getCapacityContent(ad);
     timeParagraphElement.textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до: ' + ad.offer.checkout;
     descriptionParagraphElement.textContent = ad.offer.description;
@@ -144,19 +138,9 @@
     closeButtonElement.addEventListener('click', closeElementClickHandler);
   };
 
-  var pinClickHandler = function (id) {
-    var ad = ads[id];
-
-    if (!cardElement.classList.contains('hidden')) {
-      updateCard(ad);
-    }
-
-    showCard(ad);
-  };
-
   window.export({
-    initCardAds: initCardAds,
-    pinClickHandler: pinClickHandler,
+    updateCard: updateCard,
+    showCard: showCard,
     closeCard: closeCard,
   }).to('ui.pinCard');
 })();

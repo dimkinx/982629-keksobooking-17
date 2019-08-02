@@ -7,7 +7,7 @@
   };
 
   var Request = {
-    TIMEOUT: 1000,
+    TIMEOUT: 10000,
     TYPE: 'json',
     Url: {
       GET: 'https://js.dump.academy/keksobooking/data',
@@ -21,6 +21,11 @@
       OK: 200,
       MULTIPLE_CHOICES: 300,
     },
+  };
+
+  var PhotoSize = {
+    WIDTH: 45,
+    HEIGHT: 40,
   };
 
   var PinSize = {
@@ -56,6 +61,20 @@
     palace: 10000,
   };
 
+  var offerCapacityToRoomNumber = {
+    0: [100],
+    1: [3, 2, 1],
+    2: [3, 2],
+    3: [3],
+  };
+
+  var offerRoomNumberToCapacity = {
+    1: [1],
+    2: [2, 1],
+    3: [3, 2, 1],
+    100: [0],
+  };
+
   var offerTypeEnToRu = {
     bungalo: 'Бунгало',
     flat: 'Квартира',
@@ -66,11 +85,14 @@
   window.export({
     HousePrice: HousePrice,
     Request: Request,
+    PhotoSize: PhotoSize,
     PinSize: PinSize,
     MainPinSize: MainPinSize,
     MapRect: MapRect,
     MainPinRect: MainPinRect,
     offerTypeToMinPrice: offerTypeToMinPrice,
+    offerCapacityToRoomNumber: offerCapacityToRoomNumber,
+    offerRoomNumberToCapacity: offerRoomNumberToCapacity,
     offerTypeEnToRu: offerTypeEnToRu,
   }).to('types');
 })();
