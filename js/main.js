@@ -1,14 +1,20 @@
 'use strict';
 
 (function () {
-  var page = window.import('*').from('ui.page');
-  var renderAddress = window.import('renderAddress').from('ui.ad');
+  var map = window.import('*').from('ui.map');
+  var filter = window.import('*').from('ui.filter');
+  var form = window.import('*').from('ui.form');
+  var renderAddress = window.import('renderAddress').from('ui.form');
   var initMainPin = window.import('initMainPin').from('ui.mainPin');
 
-  page.deactivate();
+  map.deactivate();
+  filter.deactivate();
+  form.deactivate();
 
   var changePinHandler = function () {
-    page.activate();
+    map.activate();
+    filter.activate();
+    form.activate();
   };
 
   var movePinHandler = function (coords) {

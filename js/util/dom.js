@@ -17,15 +17,10 @@
     element.classList.remove('hidden');
   };
 
-  var clearInput = function (input) {
-    input.value = '';
-  };
-
   window.export({
     setDisabled: setDisabled,
     unsetDisabled: unsetDisabled,
     showElement: showElement,
     hideElement: hideElement,
-    clearInput: clearInput,
   }).to('util.dom');
 })();

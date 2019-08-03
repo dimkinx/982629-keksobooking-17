@@ -4,8 +4,12 @@
   var mapElement = window.import('mapElement').from('util.domRef');
   var pinClickHandler = window.import('pinClickHandler').from('ui.filter');
   var activatePin = window.import('activatePin').from('ui.pin');
+  var removePins = window.import('removePins').from('ui.pin');
+  var pinCard = window.import('*').from('ui.pinCard');
+  var isElementShown = window.import('isElementShown').from('util.predicates');
 
-  var pinsDivElement = mapElement.querySelector('.map__pins');
+  var pinsElement = mapElement.querySelector('.map__pins');
+  var cardElement = mapElement.querySelector('.map__card');
 
   var isPin = function (element) {
     return element.className === 'map__pin';
@@ -34,12 +38,16 @@
 
   var activate = function () {
     mapElement.classList.remove('map--faded');
-    pinsDivElement.addEventListener('click', mapClickHandler);
+    pinsElement.addEventListener('click', mapClickHandler);
   };
 
   var deactivate = function () {
+    if (isElementShown(cardElement)) {
+      pinCard.closeCard();
+    }
+    removePins();
     mapElement.classList.add('map--faded');
-    pinsDivElement.removeEventListener('click', mapClickHandler);
+    pinsElement.removeEventListener('click', mapClickHandler);
   };
 
   window.export({
