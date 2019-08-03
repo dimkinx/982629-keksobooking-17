@@ -59,9 +59,9 @@
   };
 
   var MainPinRect = {
-    TOP: MapRect.TOP,
+    TOP: MapRect.TOP - MainPinSize.HEIGHT,
     RIGHT: MapRect.RIGHT - MainPinSize.RADIUS,
-    BOTTOM: MapRect.BOTTOM,
+    BOTTOM: MapRect.BOTTOM - MainPinSize.HEIGHT,
     LEFT: MapRect.LEFT - MainPinSize.RADIUS,
   };
 
