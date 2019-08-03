@@ -7,7 +7,7 @@
   };
 
   var Request = {
-    TIMEOUT: 1000,
+    TIMEOUT: 10000,
     TYPE: 'json',
     Url: {
       GET: 'https://js.dump.academy/keksobooking/data',
@@ -26,6 +26,12 @@
   var PhotoSize = {
     WIDTH: 45,
     HEIGHT: 40,
+  };
+
+  var ImagePreviewSize = {
+    WIDTH: 70,
+    HEIGHT: 70,
+    BORDER_RADIUS: 5,
   };
 
   var PinSize = {
@@ -91,6 +97,7 @@
     HousePrice: HousePrice,
     Request: Request,
     PhotoSize: PhotoSize,
+    ImagePreviewSize: ImagePreviewSize,
     PinSize: PinSize,
     MainPinSize: MainPinSize,
     MainPinCoordinate: MainPinCoordinate,
