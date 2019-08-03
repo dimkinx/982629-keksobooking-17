@@ -3,8 +3,9 @@
 (function () {
   var MainPinSize = window.import('MainPinSize').from('types');
   var MainPinRect = window.import('MainPinRect').from('types');
-  var mapElement = window.import('mapElement').from('util.domRef');
+  var MainPinCoordinate = window.import('MainPinCoordinate').from('types');
   var factories = window.import('makeDragStart', 'makeDragOnce').from('util.factories');
+  var mapElement = window.import('mapElement').from('util.domRef');
 
   var mainPinButton = mapElement.querySelector('.map__pin--main');
 
@@ -44,8 +45,16 @@
     mainPinButton.addEventListener('mousedown', mainPinDragStartHandler);
   };
 
+  var resetMainPin = function (changeHandler) {
+    renderMainPin(MainPinCoordinate.X, MainPinCoordinate.Y);
+
+    var mainPinDragOnceHandler = factories.makeDragOnce(changeHandler);
+    mainPinButton.addEventListener('mousedown', mainPinDragOnceHandler, {once: true});
+  };
+
   window.export({
     getMainPinPosition: getMainPinPosition,
     initMainPin: initMainPin,
+    resetMainPin: resetMainPin,
   }).to('ui.mainPin');
 })();

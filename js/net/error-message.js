@@ -2,8 +2,8 @@
 
 (function () {
   var isEscapeKey = window.import('isEscapeKey').from('util.predicates');
+  var mainElement = window.import('mainElement').from('util.domRef');
 
-  var mainElement = document.querySelector('main');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
 
   var createErrorMessage = function (errorMessage, tryButtonHandler) {

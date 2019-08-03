@@ -67,6 +67,8 @@
   };
 
   var deactivate = function () {
+    ads = [];
+
     inputElements.forEach(dom.setDisabled);
     dom.hideElement(domRef.filterContainerElement);
 

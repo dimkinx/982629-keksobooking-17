@@ -3,8 +3,15 @@
 (function () {
   var types = window.import('*').from('types');
   var MainPinSize = window.import('MainPinSize').from('types');
+  var domRef = window.import('*').from('util.domRef');
   var dom = window.import('unsetDisabled', 'setDisabled').from('util.dom');
   var getMainPinPosition = window.import('getMainPinPosition').from('ui.mainPin');
+  var map = window.import('*').from('ui.map');
+  var filter = window.import('*').from('ui.filter');
+  var saveData = window.import('save').from('net.backend');
+  var createSuccessMessage = window.import('createSuccessMessage').from('net.successMessage');
+  var createErrorMessage = window.import('createErrorMessage').from('net.errorMessage');
+  var resetMainPin = window.import('resetMainPin').from('ui.mainPin');
 
   var formElement = document.querySelector('.ad-form');
   var fieldSets = formElement.querySelectorAll('fieldset');
@@ -15,6 +22,7 @@
   var timeOutSelect = formElement.querySelector('#timeout');
   var roomNumberSelect = formElement.querySelector('#room_number');
   var capacitySelect = formElement.querySelector('#capacity');
+  var resetButton = formElement.querySelector('.ad-form__reset');
 
   var priceInputChangeHandler = function (evt) {
     var minPrice = types.offerTypeToMinPrice[evt.target.value];
@@ -48,6 +56,42 @@
     addressInput.value = location.x + ', ' + location.y;
   };
 
+  var changePinHandler = function () {
+    map.activate();
+    filter.activate();
+    activate();
+  };
+
+  var resetChangeHandler = function () {
+    formElement.reset();
+    domRef.filterFormElement.reset();
+
+    resetMainPin(changePinHandler);
+    priceInput.placeholder = '1000';
+
+    map.deactivate();
+    filter.deactivate();
+    deactivate();
+  };
+
+  var loadHandler = function () {
+    createSuccessMessage();
+    resetChangeHandler();
+  };
+
+  var tryButtonHandler = function () {
+    saveData(new FormData(formElement), loadHandler, errorHandler);
+  };
+
+  var errorHandler = function (errorMessage) {
+    createErrorMessage(errorMessage, tryButtonHandler);
+  };
+
+  var submitChangeHandler = function (evt) {
+    evt.preventDefault();
+    saveData(new FormData(formElement), loadHandler, errorHandler);
+  };
+
   var activate = function () {
     formElement.classList.remove('ad-form--disabled');
     fieldSets.forEach(dom.unsetDisabled);
@@ -59,6 +103,11 @@
     timeOutSelect.addEventListener('input', timeInSelectChangeHandler);
     roomNumberSelect.addEventListener('input', roomNumberChangeHandler);
     capacitySelect.addEventListener('input', capacityChangeHandler);
+    formElement.addEventListener('submit', submitChangeHandler);
+    resetButton.addEventListener('click', function (evt) {
+      evt.preventDefault();
+      resetChangeHandler();
+    }, {once: true});
   };
 
   var deactivate = function () {
@@ -72,11 +121,12 @@
     timeOutSelect.removeEventListener('input', timeInSelectChangeHandler);
     roomNumberSelect.removeEventListener('input', roomNumberChangeHandler);
     capacitySelect.removeEventListener('input', capacityChangeHandler);
+    formElement.removeEventListener('submit', submitChangeHandler);
   };
 
   window.export({
     renderAddress: renderAddress,
     activate: activate,
     deactivate: deactivate,
-  }).to('ui.ad');
+  }).to('ui.form');
 })();

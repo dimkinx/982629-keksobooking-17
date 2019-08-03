@@ -16,18 +16,18 @@
 
   createCard();
 
-  var pinsDivElement = domRef.mapElement.querySelector('.map__pins');
+  var pinsElement = domRef.mapElement.querySelector('.map__pins');
   var cardElement = domRef.mapElement.querySelector('.map__card');
-  var avatarImageElement = cardElement.querySelector('.popup__avatar');
-  var titleHeadingElement = cardElement.querySelector('.popup__title');
-  var addressParagraphElement = cardElement.querySelector('.popup__text--address');
-  var priceParagraphElement = cardElement.querySelector('.popup__text--price');
-  var typeHeadingElement = cardElement.querySelector('.popup__type');
-  var capacityParagraphElement = cardElement.querySelector('.popup__text--capacity');
-  var timeParagraphElement = cardElement.querySelector('.popup__text--time');
-  var descriptionParagraphElement = cardElement.querySelector('.popup__description');
-  var featuresUListElement = cardElement.querySelector('.popup__features');
-  var photosDivElement = cardElement.querySelector('.popup__photos');
+  var avatarElement = cardElement.querySelector('.popup__avatar');
+  var titleElement = cardElement.querySelector('.popup__title');
+  var addressElement = cardElement.querySelector('.popup__text--address');
+  var priceElement = cardElement.querySelector('.popup__text--price');
+  var typeElement = cardElement.querySelector('.popup__type');
+  var capacityElement = cardElement.querySelector('.popup__text--capacity');
+  var timeElement = cardElement.querySelector('.popup__text--time');
+  var descriptionElement = cardElement.querySelector('.popup__description');
+  var featuresListElement = cardElement.querySelector('.popup__features');
+  var photosElement = cardElement.querySelector('.popup__photos');
   var closeButtonElement = cardElement.querySelector('.popup__close');
 
   var getRemainderOfNum = function (num) {
@@ -76,14 +76,14 @@
   };
 
   var createPhoto = function (url) {
-    var photoImageElement = document.createElement('img');
-    photoImageElement.src = url;
-    photoImageElement.classList.add('popup__photo');
-    photoImageElement.width = types.PhotoSize.WIDTH;
-    photoImageElement.height = types.PhotoSize.HEIGHT;
-    photoImageElement.alt = 'Фотография жилья';
+    var photoElement = document.createElement('img');
+    photoElement.src = url;
+    photoElement.classList.add('popup__photo');
+    photoElement.width = types.PhotoSize.WIDTH;
+    photoElement.height = types.PhotoSize.HEIGHT;
+    photoElement.alt = 'Фотография жилья';
 
-    return photoImageElement;
+    return photoElement;
   };
 
   var getPhotoFragment = makeFragmentRender(createPhoto);
@@ -97,21 +97,21 @@
   };
 
   var updateCard = function (ad) {
-    avatarImageElement.src = ad.author.avatar;
-    titleHeadingElement.textContent = ad.offer.title;
-    addressParagraphElement.textContent = ad.offer.address;
-    priceParagraphElement.textContent = ad.offer.price + ' \u20bd/ночь';
-    typeHeadingElement.textContent = types.offerTypeEnToRu[ad.offer.type];
-    capacityParagraphElement.textContent = getCapacityContent(ad);
-    timeParagraphElement.textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до: ' + ad.offer.checkout;
-    descriptionParagraphElement.textContent = ad.offer.description;
+    avatarElement.src = ad.author.avatar;
+    titleElement.textContent = ad.offer.title;
+    addressElement.textContent = ad.offer.address;
+    priceElement.textContent = ad.offer.price + ' \u20bd/ночь';
+    typeElement.textContent = types.offerTypeEnToRu[ad.offer.type];
+    capacityElement.textContent = getCapacityContent(ad);
+    timeElement.textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до: ' + ad.offer.checkout;
+    descriptionElement.textContent = ad.offer.description;
 
-    renderFeatures(featuresUListElement, ad.offer.features);
-    renderPhotos(photosDivElement, ad.offer.photos);
+    renderFeatures(featuresListElement, ad.offer.features);
+    renderPhotos(photosElement, ad.offer.photos);
   };
 
   var closeCard = function () {
-    var activePinButtonElement = pinsDivElement.querySelector('.map__pin--active');
+    var activePinButtonElement = pinsElement.querySelector('.map__pin--active');
 
     if (activePinButtonElement !== null) {
       activePinButtonElement.classList.remove('map__pin--active');

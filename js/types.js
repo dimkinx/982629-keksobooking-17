@@ -7,7 +7,7 @@
   };
 
   var Request = {
-    TIMEOUT: 10000,
+    TIMEOUT: 1000,
     TYPE: 'json',
     Url: {
       GET: 'https://js.dump.academy/keksobooking/data',
@@ -40,6 +40,11 @@
     RADIUS: 33,
   };
 
+  var MainPinCoordinate = {
+    X: 570,
+    Y: 375,
+  };
+
   var MapRect = {
     LEFT: 0,
     RIGHT: 1200,
@@ -63,8 +68,8 @@
 
   var offerCapacityToRoomNumber = {
     0: [100],
-    1: [3, 2, 1],
-    2: [3, 2],
+    1: [1, 2, 3],
+    2: [2, 3],
     3: [3],
   };
 
@@ -88,6 +93,7 @@
     PhotoSize: PhotoSize,
     PinSize: PinSize,
     MainPinSize: MainPinSize,
+    MainPinCoordinate: MainPinCoordinate,
     MapRect: MapRect,
     MainPinRect: MainPinRect,
     offerTypeToMinPrice: offerTypeToMinPrice,
